@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 
 import HomeComponent from './Main.vue';
+import CallBack from './CallBack.vue'
 
 const NotFoundComponent = {
     template: '<p>Page not found</p>'
@@ -13,7 +14,8 @@ const AboutComponent = {
 
 const routes = {
     '/': HomeComponent,
-    '/about': AboutComponent
+    '/about': AboutComponent,
+    '/callback': CallBack
 }
 
 const SimpleRouter = {
