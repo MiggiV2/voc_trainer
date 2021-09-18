@@ -1,1 +1,1 @@
-Quarkus guide: https://quarkus.io/guides/rest-json
+RestAPI for Discord OAuth introspection!
