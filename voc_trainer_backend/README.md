@@ -1,1 +1,1 @@
-Quarkus guide: https://quarkus.io/guides/rest-json
+Manage all dictionary, using Discord access_token to identify the users
