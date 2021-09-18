@@ -15,3 +15,5 @@ export function getURLHashParams() {
     }, {});
     return result;
 }
+
+export var HOST = "http://localhost:8888/";

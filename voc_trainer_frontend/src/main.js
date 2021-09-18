@@ -4,18 +4,17 @@ import "bootstrap/dist/js/bootstrap.min.js";
 
 import HomeComponent from './Main.vue';
 import CallBack from './CallBack.vue'
+import Add from './Add.vue';
 
 const NotFoundComponent = {
     template: '<p>Page not found</p>'
 }
-const AboutComponent = {
-    template: '<p>About page</p>'
-}
 
 const routes = {
     '/': HomeComponent,
-    '/about': AboutComponent,
-    '/callback': CallBack
+    '/callback': CallBack,
+    '/add': Add,
+    '/read': HomeComponent
 }
 
 const SimpleRouter = {
@@ -34,4 +33,6 @@ const SimpleRouter = {
     }
 }
 
-createApp(SimpleRouter).mount('#app')
+const app = createApp(SimpleRouter);
+
+app.mount('#app')
