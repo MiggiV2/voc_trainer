@@ -9,10 +9,9 @@
           <div class="col"></div>
           <div class="col-auto">
             <img
-              v-if="item.userAvater != null && item.userAvater.length > 10"
+            v-if="(item.userAvater != null && item.userAvater.length > 10)"
               class="avatar"
               :src="getAvatar(item.userID, item.userAvater)"
-              :title="item.userName"
             />
           </div>
         </div>
@@ -27,9 +26,17 @@
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 
+var urlParams = new URLSearchParams(window.location.search);
+var query = urlParams.get("query");
 var preview = reactive({
   content: [],
 });
+
+if (urlParams.has("query")) {
+  sendRequest();
+} else {
+  window.location = "/";
+}
 
 function getAvatar(id, avatar) {
   return (
@@ -37,23 +44,29 @@ function getAvatar(id, avatar) {
   );
 }
 
-fetch(HOST + "api/get/preview", {
-  credentails: "same-origin",
-  mode: "cors",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      console.log(response.statusText);
-    }
+function sendRequest() {
+  fetch(HOST + "api/search", {
+    method: "POST",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify({
+      query: query,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
-  .then((previewResponse) => {
-    preview.content = previewResponse;
-  });
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        console.log(response.statusText);
+      }
+    })
+    .then((previewResponse) => {
+      preview.content = previewResponse;
+    });
+}
 </script>
 
 <style scoped>

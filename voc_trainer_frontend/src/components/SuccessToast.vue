@@ -1,5 +1,10 @@
 <template>
-  <div class="boxes success">
+  <div v-if="props.success" class="boxes success">
+    <h2>{{props.content}}</h2>
+    <hr />
+    <p>Redirect in 5sec</p>
+  </div>
+  <div v-else class="boxes error">
     <h2>{{props.content}}</h2>
     <hr />
     <p>Redirect in 5sec</p>
@@ -25,6 +30,10 @@ const props = defineProps({
 }
 .success {
   background: rgb(0, 172, 0);
+  color: white;
+}
+.error{
+  background: rgb(235, 23, 23);
   color: white;
 }
 </style>

@@ -6,6 +6,7 @@ public class DiscordResponse
 	private String[] scopes;
 	private DiscordUser user;
 	private boolean active = true;
+	private String role;
 
 	public String getExpires()
 	{
@@ -54,5 +55,15 @@ public class DiscordResponse
 	public String getID()
 	{
 		return user.getId();
+	}
+
+	public String getRole()
+	{
+		return role;
+	}
+
+	public void setRole(String role)
+	{
+		this.role = role;
 	}
 }

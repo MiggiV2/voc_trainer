@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <form>
+    <form @submit="search" onsubmit="return false">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search term" />
+      <input type="text" class="form-control" placeholder="Search term" v-model="request.query" />
       <button type="submit" class="btn btn-primary">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -23,6 +23,26 @@
 </template>
 
 <script setup>
+import { reactive } from "vue";
+var urlParams = new URLSearchParams(window.location.search);
+var request = reactive({
+  query: "",
+});
+if(urlParams.has('query'))
+{
+  request.query = urlParams.get('query');
+}
+function search()
+{
+  request.query = request.query.replace(/ /g,'');
+  if(request.query === '')
+  {
+    window.location = '/';
+  }
+  else{
+    window.location = '/search?query=' + request.query;
+  }
+}
 </script>
 
 <style scoped>

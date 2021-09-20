@@ -1,4 +1,4 @@
-package de.mymiggi.voc.trainer.entity;
+package de.mymiggi.voc.trainer.entity.db;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

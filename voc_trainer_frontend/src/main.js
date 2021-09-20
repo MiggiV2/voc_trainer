@@ -5,6 +5,8 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import HomeComponent from './Main.vue';
 import CallBack from './CallBack.vue'
 import Add from './Add.vue';
+import Read from './Read.vue';
+import Search from './Search.vue';
 
 const NotFoundComponent = {
     template: '<p>Page not found</p>'
@@ -14,7 +16,9 @@ const routes = {
     '/': HomeComponent,
     '/callback': CallBack,
     '/add': Add,
-    '/read': HomeComponent
+    '/read': Read,
+    '/train': HomeComponent,
+    '/search': Search
 }
 
 const SimpleRouter = {

@@ -1,14 +1,14 @@
 <template>
 <Header/>
 <SearchForm />
-<Preview />
+<SearchContent />
 <Footer />
 </template>
 
 <script setup>
 import Header from './components/Header.vue';
 import SearchForm from './components/SearchForm.vue'
-import Preview from './components/Preview.vue';
+import SearchContent from './components/SearchContent.vue';
 import Footer from './components/Footer.vue';
 
 document.title = 'Welcome | Voc-Trainer';

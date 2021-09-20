@@ -3,6 +3,7 @@ package de.mymiggi.voc.trainer;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -12,14 +13,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
+import com.google.gson.Gson;
+
+import de.mymiggi.voc.trainer.actions.DeleteDictionaryAction;
 import de.mymiggi.voc.trainer.actions.GetDictionaryByIDAction;
 import de.mymiggi.voc.trainer.actions.GetPreviewAction;
 import de.mymiggi.voc.trainer.actions.SaveDictionaryAction;
+import de.mymiggi.voc.trainer.actions.SearchDictionaryAction;
 import de.mymiggi.voc.trainer.actions.helper.BuildUserFromContext;
 import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.SearchRequest;
+import de.mymiggi.voc.trainer.manager.DictionaryEntryManager;
+import de.mymiggi.voc.trainer.manager.WordsManager;
 
 @Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,12 +34,14 @@ import de.mymiggi.voc.trainer.entity.Dictionary;
 public class DictionaryResource
 {
 	public static final UniversalHibernateClient HIBERNATE_CLIENT = new UniversalHibernateClient();
+	public static final WordsManager WORDS_MANAGER = new WordsManager();
+	public static final DictionaryEntryManager DICTIONARY_MANAGER = new DictionaryEntryManager();
 
 	@POST
 	@Path("search")
-	public Response search()
+	public Response search(SearchRequest searchRequest)
 	{
-		return Response.status(Status.NOT_IMPLEMENTED).build();
+		return new SearchDictionaryAction().run(searchRequest);
 	}
 
 	@GET
@@ -57,10 +66,27 @@ public class DictionaryResource
 		return new SaveDictionaryAction().run(dictionary, new BuildUserFromContext().run(ctx));
 	}
 
+	@PUT
+	@Path("sync-db")
+	@RolesAllowed({ "admin" })
+	public Response sync()
+	{
+		WORDS_MANAGER.syncList();
+		DICTIONARY_MANAGER.syncList();
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("delete")
+	@PermitAll
+	public Response delete(Dictionary dictionary)
+	{
+		return new DeleteDictionaryAction().run(dictionary);
+	}
+
 	@GET
 	@Path("admin")
-	@RolesAllowed({ "309696934174785556" })
-	@Produces(MediaType.TEXT_PLAIN)
+	@RolesAllowed({ "admin" })
 	public Response admin(@Context SecurityContext ctx)
 	{
 		return Response.ok().build();
@@ -68,10 +94,10 @@ public class DictionaryResource
 
 	@GET
 	@Path("test")
-	@RolesAllowed({ "309696934174785556" })
+	@PermitAll
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response test(@Context SecurityContext ctx)
 	{
-		return Response.ok(ctx.getUserPrincipal().getName()).build();
+		return Response.ok(new Gson().toJson(ctx.getUserPrincipal())).build();
 	}
 }

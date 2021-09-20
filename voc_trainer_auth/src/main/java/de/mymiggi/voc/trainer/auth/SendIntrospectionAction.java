@@ -9,6 +9,7 @@ import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
 
+import de.mymiggi.voc.trainer.AuthResource;
 import de.mymiggi.voc.trainer.entity.DiscordResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +37,8 @@ public class SendIntrospectionAction
 		try
 		{
 			okhttp3.Response response = client.newCall(request).execute();
-			return handleResponse(url, response);
+			logger.info("Status:" + response.code() + " URL:" + url);
+			return handleResponse(response);
 		}
 		catch (IOException e)
 		{
@@ -45,9 +47,8 @@ public class SendIntrospectionAction
 		}
 	}
 
-	private Response handleResponse(String url, okhttp3.Response response) throws IOException
+	private Response handleResponse(okhttp3.Response response) throws IOException
 	{
-		logger.info("Status:" + response.code() + " URL:" + url);
 		if (response.code() == 401)
 		{
 			response.close();
@@ -58,6 +59,9 @@ public class SendIntrospectionAction
 			int code = response.code();
 			DiscordResponse discordResponse = new Gson().fromJson(response.body().string(), DiscordResponse.class);
 			response.close();
+			String role = (AuthResource.admins.contains(discordResponse.getID())) ? "admin" : "user";
+			logger.info("Role:" + role);
+			discordResponse.setRole(role);
 			return Response.status(code).entity(discordResponse).build();
 		}
 	}

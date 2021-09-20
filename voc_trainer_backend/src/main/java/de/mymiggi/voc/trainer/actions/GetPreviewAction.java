@@ -6,13 +6,13 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
-import de.mymiggi.voc.trainer.entity.DictionaryEntry;
+import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 
 public class GetPreviewAction
 {
 	public Response run()
 	{
-		List<DictionaryEntry> allEntrys = DictionaryResource.HIBERNATE_CLIENT.getList(DictionaryEntry.class);
+		List<DictionaryEntry> allEntrys = DictionaryResource.DICTIONARY_MANAGER.getList();
 		List<DictionaryEntry> entrys = new ArrayList<DictionaryEntry>();
 		if (allEntrys.size() < 5)
 		{

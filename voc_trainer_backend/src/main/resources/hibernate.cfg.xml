@@ -22,7 +22,7 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Annotated entity classes -->
-        <mapping class="de.mymiggi.voc.trainer.entity.Words"/>
-        <mapping class="de.mymiggi.voc.trainer.entity.DictionaryEntry"/>
+        <mapping class="de.mymiggi.voc.trainer.entity.db.Words"/>
+        <mapping class="de.mymiggi.voc.trainer.entity.db.DictionaryEntry"/>
     </session-factory>
 </hibernate-configuration>

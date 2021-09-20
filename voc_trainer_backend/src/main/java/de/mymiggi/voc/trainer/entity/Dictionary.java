@@ -1,5 +1,8 @@
 package de.mymiggi.voc.trainer.entity;
 
+import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
+import de.mymiggi.voc.trainer.entity.db.Words;
+
 public class Dictionary
 {
 	private String name;
