@@ -24,7 +24,9 @@
           <button
             v-else
             class="btn btn-success btn-sm update-button"
-            @click="sendUpdate()"
+            @click="startUpdate()"
+            data-bs-toggle="modal"
+            data-bs-target="#updatedModal"
           >
             <Check />
           </button>
@@ -49,61 +51,76 @@
       <a>Englisch &lt;--&gt; German</a>
     </div>
     <div
+      v-if="dictionary.content.words.length == 0"
+      class="spinner-border"
+    ></div>
+    <div
       class="words"
       v-for="(item, index) in dictionary.content.words"
       :key="index"
     >
-      <div v-if="show.edit">
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Englisch word"
-            v-model="item.eng"
-          />
-          <input
-            type="text"
-            class="form-control"
-            placeholder="German word"
-            v-model="item.ger"
-          />
+      <div v-if="item.dictionaryID != null">
+        <div v-if="show.edit">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Englisch word"
+              v-model="item.eng"
+            />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="German word"
+              v-model="item.ger"
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="(OPTIONAL) description, opposite, etc..."
+              v-model="item.op"
+            />
+            <div
+              v-if="index == dictionary.content.words.length - 1"
+              class="btn btn-primary"
+              @click="addFlied()"
+            >
+              <Plus />
+            </div>
+            <div v-else class="btn btn-danger" @click="removeFiled(item)">
+              <Dash />
+            </div>
+          </div>
         </div>
-        <div class="input-group">
-          <input
-            v-if="showItem(item)"
-            type="text"
-            class="form-control"
-            placeholder="(OPTIONAL) description, opposite, etc..."
-            v-model="item.op"
-          />
-        </div>
-      </div>
-      <div v-else>
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Englisch word"
-            v-model="item.eng"
-            readonly
-          />
-          <input
-            type="text"
-            class="form-control"
-            placeholder="German word"
-            v-model="item.ger"
-            readonly
-          />
-        </div>
-        <div class="input-group">
-          <input
-            v-if="showItem(item)"
-            type="text"
-            class="form-control"
-            placeholder="(OPTIONAL) description, opposite, etc..."
-            v-model="item.op"
-            readonly
-          />
+        <div v-else>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Englisch word"
+              v-model="item.eng"
+              readonly
+            />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="German word"
+              v-model="item.ger"
+              readonly
+            />
+          </div>
+          <div class="input-group">
+            <input
+              v-if="showItem(item)"
+              type="text"
+              class="form-control"
+              placeholder="(OPTIONAL) description, opposite, etc..."
+              v-model="item.op"
+              readonly
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -113,36 +130,6 @@
     :content="show.content"
     :success="show.success"
   />
-  <!--SaveModal-->
-  <div
-    class="modal fade"
-    id="editModal"
-    tabindex="-1"
-    aria-labelledby="editModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">
-            You can now update your dictionary
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">Dont forget to save your changes!</div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">
-            Okay
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
   <!--UpdatedModal-->
   <div
     class="modal fade"
@@ -154,7 +141,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="updatedModalLabel">Updated!</h5>
+          <h5 class="modal-title" id="updatedModalLabel">{{ modal.title }}</h5>
           <button
             type="button"
             class="btn-close"
@@ -162,10 +149,15 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body">Your changes have been applied!</div>
+        <div class="modal-body">{{ modal.body }}</div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">
-            Okay
+          <button
+            v-if="modal.showButton"
+            type="button"
+            class="btn btn-success"
+            data-bs-dismiss="modal"
+          >
+            {{ modal.button }}
           </button>
         </div>
       </div>
@@ -175,11 +167,13 @@
 
 <script setup>
 import { reactive } from "vue";
-import { HOST } from "../tools/auth";
+import { HOST, sha512 } from "../tools/auth";
 import { getAvatarURLFromUser } from "../tools/user";
 import { getCookie } from "../tools/cookie";
 import Toast from "./SuccessToast.vue";
 
+import Plus from "./icons/Plus.vue";
+import Dash from "./icons/Dash.vue";
 import Pencil from "./icons/Pencil.vue";
 import Trash from "./icons/Trash.vue";
 import Check from "./icons/Check.vue";
@@ -191,12 +185,7 @@ var dictionary = reactive({
     name: "...",
     id: urlParams.get("id"),
     user: null,
-    words: [
-      {
-        eng: "...",
-        ger: "...",
-      },
-    ],
+    words: [],
   },
 });
 var show = reactive({
@@ -204,6 +193,13 @@ var show = reactive({
   content: null,
   edit: false,
 });
+var modal = reactive({
+  body: "",
+  title: "",
+  button: "Okay",
+  showButton: true,
+});
+var lastWordHash = "";
 
 if (dictionary.content.id === null || dictionary.content.id.length < 30) {
   console.log("Need ?id=UUID");
@@ -239,6 +235,7 @@ function sendRequest() {
           dictionary.content.user.avatarURL = getAvatarURLFromUser(
             dictionary.content.user
           );
+          setWordHash();
         }
       }
     })
@@ -246,6 +243,103 @@ function sendRequest() {
       showMessage(e, false);
       console.log(e);
     });
+}
+
+function sendDelete() {
+  dictionary.content.words = [];
+  fetch(HOST + "api/delete", {
+    method: "DELETE",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify(dictionary.content),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + getCookie("access_token"),
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        showMessage("Deleted!", true);
+      } else {
+        return response.json();
+      }
+    })
+    .then((message) => {
+      if (message != null) {
+        showMessage(message.content, false);
+      }
+    })
+    .catch((ex) => {
+      showMessage("Error " + ex, false);
+      console.log(ex);
+    });
+}
+
+function sendUpdate() {
+  modal.title = "Sending...";
+  modal.body = "Pls wait";
+  modal.showButton = false;
+  show.edit = false;
+  fetch(HOST + "api/update/dictionary?id=" + dictionary.content.id, {
+    method: "PUT",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify(dictionary.content.words),
+    headers: {
+      Authorization: "Bearer " + getCookie("access_token"),
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        sendRequest();
+        modal.title = "Updated!";
+        modal.body = "Your changes have been applied!";
+        modal.showButton = true;
+      } else {
+        return response.json();
+      }
+    })
+    .then((message) => {
+      if (message != null) {
+       showMessage(message.content, false);
+      }
+    })
+    .catch((ex) => {
+      showMessage("Error " + ex, false);
+    });
+}
+
+function startUpdate() {
+  sha512(JSON.stringify(dictionary.content.words)).then((hash) => {
+    if (hash == lastWordHash) {
+      modal.title = "Canceled!";
+      modal.body = "You have nothing changed!";
+      modal.showButton = true;
+      show.edit = false;
+    } else {
+      sendUpdate();
+    }
+  });
+}
+
+function removeFiled(word) {
+  word.dictionaryID = null;
+}
+
+function addFlied() {
+  dictionary.content.words.push({
+    eng: "",
+    ger: "",
+    op: "",
+    dictionaryID: dictionary.content.id,
+  });
+}
+
+function setWordHash() {
+  sha512(JSON.stringify(dictionary.content.words)).then((hash) => {
+    lastWordHash = hash;
+  });
 }
 
 function showMessage(content, isSuccess) {
@@ -263,69 +357,6 @@ function showItem(item) {
     typeof item.op !== "undefined" &&
     item.op != ""
   );
-}
-
-function sendDelete() {
-  dictionary.content.words = [];
-  fetch(HOST + "api/delete", {
-    method: "DELETE",
-    credentails: "same-origin",
-    mode: "cors",
-    body: JSON.stringify(dictionary.content),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        showMessage("Deleted!", true);
-      } else {
-        return response.json();
-      }
-    })
-    .then((message) => {
-      if (message != null) {
-        showMessage(message.content, false);
-      }
-    })
-    .catch((ex) => {
-      showMessage("Error " + ex, false);
-    });
-}
-
-function sendUpdate() {
-  show.edit = false;
-  fetch(HOST + "api/update/dictionary?id=" + dictionary.content.id, {
-    method: "PUT",
-    credentails: "same-origin",
-    mode: "cors",
-    body: JSON.stringify(dictionary.content.words),
-    headers: {
-      Authorization: "Bearer " + getCookie("access_token"),
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        sendRequest();
-        /*
-        var myModal = new bootstrap.Modal(
-          document.getElementById("updatedModal")
-        );
-        myModal.show();
-        */
-      } else {
-        return response.json();
-      }
-    })
-    .then((message) => {
-      if (message != null) {
-        showMessage(message.content, false);
-      }
-    })
-    .catch((ex) => {
-      showMessage("Error " + ex, false);
-    });
 }
 
 function cancel() {
@@ -380,5 +411,10 @@ input:focus {
 }
 .update-button {
   margin-top: 0.5rem;
+}
+.spinner-border {
+  margin: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 3rem;
 }
 </style>

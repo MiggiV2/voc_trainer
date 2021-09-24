@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
+import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 import de.mymiggi.voc.trainer.entity.db.Words;
 
@@ -32,7 +33,7 @@ public class WordsManager
 		List<Words> dictionary = new ArrayList<Words>();
 		for (Words temp : getList())
 		{
-			if (entry.getID().equals(temp.getDictionaryID()))
+			if (temp.getDictionaryID() != null && entry.getID().equals(temp.getDictionaryID()))
 			{
 				dictionary.add(temp);
 			}
@@ -58,6 +59,7 @@ public class WordsManager
 					{
 						e.printStackTrace();
 					}
+					new CleanDataBaseAction().run();
 					syncList();
 				}
 			}

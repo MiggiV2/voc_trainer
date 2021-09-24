@@ -16,6 +16,9 @@ import de.mymiggi.voc.trainer.entity.db.Words;
 
 public class UpdateDictionaryAction
 {
+	/*
+	 * 
+	 */
 	public Response run(String id, DiscordUser user, List<Words> newWords)
 	{
 		DictionaryEntry entry = DictionaryResource.DICTIONARY_MANAGER.getByID(id);
@@ -38,10 +41,14 @@ public class UpdateDictionaryAction
 		}
 		for (Words temp : newWords)
 		{
-			listToSave.add(
-				idMap.containsKey(temp.getID())
-					? update(idMap.get(temp.getID()), temp)
-					: temp);
+			if (temp != null)
+			{
+				listToSave.add(
+					idMap.containsKey(temp.getID())
+						? update(idMap.get(temp.getID()), temp)
+						: temp);
+
+			}
 		}
 		DictionaryResource.HIBERNATE_CLIENT.saveList(listToSave);
 		DictionaryResource.WORDS_MANAGER.syncList();
@@ -51,6 +58,7 @@ public class UpdateDictionaryAction
 	private Words update(Words oldWord, Words newWord)
 	{
 		return oldWord
+			.setDictionaryID(newWord.getDictionaryID())
 			.setEng(newWord.getEng())
 			.setGer(newWord.getGer())
 			.setOp(newWord.getOp());

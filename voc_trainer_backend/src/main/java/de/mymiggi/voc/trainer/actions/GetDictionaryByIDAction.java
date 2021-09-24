@@ -41,7 +41,10 @@ public class GetDictionaryByIDAction
 		List<Words> words = new ArrayList<Words>();
 		for (Words temp : wordsEntries)
 		{
-			if (temp.getDictionaryID().equals(dictionary.getID()))
+			if (temp.getDictionaryID() != null &&
+				temp.getDictionaryID().equals(dictionary.getID()) &&
+				!temp.getEng().isBlank() &&
+				!temp.getGer().isBlank())
 			{
 				words.add(temp);
 			}

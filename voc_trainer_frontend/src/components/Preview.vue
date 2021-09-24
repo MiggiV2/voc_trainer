@@ -1,5 +1,6 @@
 <template>
   <div class="preview-wrapped">
+    <div v-if="preview.content.length == 0" class="spinner-border"></div>
     <div class="preview" v-for="(item, index) in preview.content" :key="index">
       <a :href="'/read?id=' + item.id">
         <div class="row">
@@ -82,5 +83,9 @@ a:visited {
 .avatar {
   max-height: 40px;
   border-radius: 5px;
+}
+.spinner-border{
+  margin-left: 45vw;
+  margin-top: 2rem;
 }
 </style>

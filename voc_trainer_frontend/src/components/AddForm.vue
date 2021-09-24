@@ -109,7 +109,6 @@ function isUndefined(word) {
 }
 
 function removeFiled(index) {
-  console.log(dictionary.words);
   delete dictionary.words[index];
 }
 

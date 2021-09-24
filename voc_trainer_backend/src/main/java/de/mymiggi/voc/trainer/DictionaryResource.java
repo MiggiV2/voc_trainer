@@ -26,6 +26,7 @@ import de.mymiggi.voc.trainer.actions.SaveDictionaryAction;
 import de.mymiggi.voc.trainer.actions.SearchDictionaryAction;
 import de.mymiggi.voc.trainer.actions.UpdateDictionaryAction;
 import de.mymiggi.voc.trainer.actions.helper.BuildUserFromContext;
+import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.Dictionary;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
 import de.mymiggi.voc.trainer.entity.db.Words;
@@ -88,6 +89,7 @@ public class DictionaryResource
 	{
 		WORDS_MANAGER.syncList();
 		DICTIONARY_MANAGER.syncList();
+		new CleanDataBaseAction().run();
 		return Response.ok().build();
 	}
 
