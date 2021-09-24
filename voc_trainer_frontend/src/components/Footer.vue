@@ -35,6 +35,7 @@ var botURL =
   position: fixed;
   bottom: 0;
   height: 35px;
+  z-index: 100;
 }
 .footer {
   padding: 6px;

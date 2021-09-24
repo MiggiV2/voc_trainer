@@ -21,9 +21,10 @@ public class Words
 		return ger;
 	}
 
-	public void setGer(String ger)
+	public Words setGer(String ger)
 	{
 		this.ger = ger;
+		return this;
 	}
 
 	public String getEng()
@@ -31,9 +32,10 @@ public class Words
 		return eng;
 	}
 
-	public void setEng(String eng)
+	public Words setEng(String eng)
 	{
 		this.eng = eng;
+		return this;
 	}
 
 	public String getOp()
@@ -41,9 +43,10 @@ public class Words
 		return op;
 	}
 
-	public void setOp(String op)
+	public Words setOp(String op)
 	{
 		this.op = op;
+		return this;
 	}
 
 	public String getDictionaryID()
@@ -51,8 +54,20 @@ public class Words
 		return dictionaryID;
 	}
 
-	public void setDictionaryID(String dictionaryID)
+	public Words setDictionaryID(String dictionaryID)
 	{
 		this.dictionaryID = dictionaryID;
+		return this;
+	}
+
+	public int getID()
+	{
+		return ID;
+	}
+
+	public Words setID(int iD)
+	{
+		ID = iD;
+		return this;
 	}
 }

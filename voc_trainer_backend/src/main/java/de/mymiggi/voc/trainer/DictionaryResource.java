@@ -1,5 +1,7 @@
 package de.mymiggi.voc.trainer;
 
+import java.util.List;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -8,8 +10,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,9 +24,11 @@ import de.mymiggi.voc.trainer.actions.GetDictionaryByIDAction;
 import de.mymiggi.voc.trainer.actions.GetPreviewAction;
 import de.mymiggi.voc.trainer.actions.SaveDictionaryAction;
 import de.mymiggi.voc.trainer.actions.SearchDictionaryAction;
+import de.mymiggi.voc.trainer.actions.UpdateDictionaryAction;
 import de.mymiggi.voc.trainer.actions.helper.BuildUserFromContext;
 import de.mymiggi.voc.trainer.entity.Dictionary;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
+import de.mymiggi.voc.trainer.entity.db.Words;
 import de.mymiggi.voc.trainer.manager.DictionaryEntryManager;
 import de.mymiggi.voc.trainer.manager.WordsManager;
 
@@ -39,6 +43,7 @@ public class DictionaryResource
 
 	@POST
 	@Path("search")
+	@PermitAll
 	public Response search(SearchRequest searchRequest)
 	{
 		return new SearchDictionaryAction().run(searchRequest);
@@ -46,21 +51,31 @@ public class DictionaryResource
 
 	@GET
 	@Path("get/preview")
+	@PermitAll
 	public Response getpreview()
 	{
 		return new GetPreviewAction().run();
 	}
 
 	@GET
-	@Path("get/dictionary/{id}")
-	public Response getDictionary(@PathParam("id") String id)
+	@Path("get/dictionary")
+	@PermitAll
+	public Response getDictionary(@QueryParam("id") String id)
 	{
 		return new GetDictionaryByIDAction().run(id);
 	}
 
 	@PUT
+	@Path("update/dictionary")
+	@RolesAllowed({ "user", "admin" })
+	public Response updateDictionary(@Context SecurityContext ctx, @QueryParam("id") String id, List<Words> newWords)
+	{
+		return new UpdateDictionaryAction().run(id, new BuildUserFromContext().run(ctx), newWords);
+	}
+
+	@PUT
 	@Path("save")
-	@PermitAll
+	@RolesAllowed({ "user", "admin" })
 	public Response save(@Context SecurityContext ctx, Dictionary dictionary)
 	{
 		return new SaveDictionaryAction().run(dictionary, new BuildUserFromContext().run(ctx));
@@ -78,7 +93,7 @@ public class DictionaryResource
 
 	@DELETE
 	@Path("delete")
-	@PermitAll
+	@RolesAllowed({ "user", "admin" })
 	public Response delete(Dictionary dictionary)
 	{
 		return new DeleteDictionaryAction().run(dictionary);
@@ -94,7 +109,7 @@ public class DictionaryResource
 
 	@GET
 	@Path("test")
-	@PermitAll
+	@RolesAllowed({ "user", "admin" })
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response test(@Context SecurityContext ctx)
 	{
