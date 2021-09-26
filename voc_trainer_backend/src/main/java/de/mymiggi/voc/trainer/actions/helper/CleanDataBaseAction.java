@@ -17,7 +17,10 @@ public class CleanDataBaseAction
 		wordsEntries.stream()
 			.filter(word -> !dictionaryExists(word, dictionaryEntries) || word.getEng().isBlank() || word.getGer().isBlank())
 			.forEach(word -> toDelete.add(word));
-		DictionaryResource.HIBERNATE_CLIENT.deleteList(toDelete);
+		if (!toDelete.isEmpty())
+		{
+			DictionaryResource.HIBERNATE_CLIENT.deleteList(toDelete);
+		}
 	}
 
 	private boolean dictionaryExists(Words word, List<DictionaryEntry> dictionaryEntries)

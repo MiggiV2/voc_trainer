@@ -3,34 +3,12 @@
   <div v-if="show.content === null" class="dictionary">
     <div class="row header" v-if="dictionary.content.user != null">
       <div class="col-1">
-        <div v-if="isYours()">
-          <button
-            v-if="!show.edit"
-            class="btn btn-danger btn-sm"
-            @click="sendDelete()"
-          >
-            <Trash />
-          </button>
-          <button v-else class="btn btn-danger btn-sm" @click="cancel()">
-            <Cross />
-          </button>
-          <button
-            v-if="!show.edit"
-            class="btn btn-primary btn-sm update-button"
-            @click="edit()"
-          >
-            <Pencil />
-          </button>
-          <button
-            v-else
-            class="btn btn-success btn-sm update-button"
-            @click="startUpdate()"
-            data-bs-toggle="modal"
-            data-bs-target="#updatedModal"
-          >
-            <Check />
-          </button>
-        </div>
+        <img
+          class="avatar"
+          v-if="dictionary.content.user.avatarURL != null"
+          :src="dictionary.content.user.avatarURL"
+          :title="dictionary.content.user.name"
+        />
       </div>
       <div class="col">
         <h3 class="title">
@@ -38,13 +16,61 @@
           <a> by {{ dictionary.content.user.name }}</a>
         </h3>
       </div>
-      <div class="col-1">
-        <img
-          class="avatar"
-          v-if="dictionary.content.user.avatarURL != null"
-          :src="dictionary.content.user.avatarURL"
-          :title="dictionary.content.user.name"
-        />
+      <div class="col-1 btn-group" role="group">
+        <div
+          class="group-item"
+          role="button"
+          @click="sendBindRequest()"
+          v-if="!show.edit"
+          data-bs-toggle="modal"
+          data-bs-target="#updatedModal"
+        >
+          <Journal />
+        </div>
+        <div class="group-item" v-if="isYours()">
+          <div v-if="!show.edit">
+            <div
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <Gear />
+            </div>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  class="dropdown-item btn btn-danger btn-sm"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModal"
+                >
+                  <Trash />
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item btn btn-primary btn-sm update-button"
+                  @click="edit()"
+                >
+                  <Pencil />
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+            <button class="btn btn-danger btn-sm" @click="cancel()">
+              <Cross />
+            </button>
+            <button
+              class="btn btn-success btn-sm update-button"
+              @click="startUpdate()"
+              data-bs-toggle="modal"
+              data-bs-target="#updatedModal"
+            >
+              <Check />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="sub-title">
@@ -83,13 +109,13 @@
               v-model="item.op"
             />
             <div
-              v-if="index == dictionary.content.words.length - 1"
-              class="btn btn-primary"
+              v-if="isLastItem(item)"
+              class="btn btn-outline-secondary"
               @click="addFlied()"
             >
               <Plus />
             </div>
-            <div v-else class="btn btn-danger" @click="removeFiled(item)">
+            <div class="btn btn-outline-secondary" @click="removeFiled(item)">
               <Dash />
             </div>
           </div>
@@ -130,7 +156,7 @@
     :content="show.content"
     :success="show.success"
   />
-  <!--UpdatedModal-->
+  <!--Modal-->
   <div
     class="modal fade"
     id="updatedModal"
@@ -151,13 +177,69 @@
         </div>
         <div class="modal-body">{{ modal.body }}</div>
         <div class="modal-footer">
+          <div v-if="funcToRun != null">
+            <button
+              class="btn btn-danger"
+              type="button"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              v-if="modal.showButton"
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+              @click="modal.funcToRun()"
+            >
+              {{ modal.button }}
+            </button>
+          </div>
+          <div v-else>
+            <button
+              v-if="modal.showButton"
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+            >
+              {{ modal.button }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--DeleteModal-->
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModallLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Sure?</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Are you sure? You you really want to delete this dictionary?
+        </div>
+        <div class="modal-footer">
           <button
             v-if="modal.showButton"
             type="button"
             class="btn btn-success"
             data-bs-dismiss="modal"
+            @click="sendDelete()"
           >
-            {{ modal.button }}
+            Yes
           </button>
         </div>
       </div>
@@ -178,6 +260,8 @@ import Pencil from "./icons/Pencil.vue";
 import Trash from "./icons/Trash.vue";
 import Check from "./icons/Check.vue";
 import Cross from "./icons/X.vue";
+import Gear from "./icons/Gear.vue";
+import Journal from "./icons/Journal.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 var dictionary = reactive({
@@ -198,6 +282,7 @@ var modal = reactive({
   title: "",
   button: "Okay",
   showButton: true,
+  funcToRun: null,
 });
 var lastWordHash = "";
 
@@ -302,11 +387,56 @@ function sendUpdate() {
     })
     .then((message) => {
       if (message != null) {
-       showMessage(message.content, false);
+        modal.title = "Failed!";
+        modal.body = message.content;
+        modal.showButton = true;
       }
     })
     .catch((ex) => {
-      showMessage("Error " + ex, false);
+      modal.title = "Error!";
+      modal.body = ex;
+      modal.showButton = true;
+    });
+}
+
+function sendBindRequest() {
+  modal.title = "Sending...";
+  modal.body = "Pls wait";
+  modal.showButton = false;
+  fetch(HOST + "api/bind?id=" + dictionary.content.id, {
+    method: "PUT",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify(dictionary.content.words),
+    headers: {
+      Authorization: "Bearer " + getCookie("access_token"),
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        sendRequest();
+        modal.title = "Done!";
+        modal.body = "You have bond this dictionary!";
+        modal.showButton = true;
+        modal.funcToRun = openTainer;
+        console.log(modal.funcToRun);
+        /* Dont run func */
+      } else {
+        return response.json();
+      }
+    })
+    .then((message) => {
+      if (message != null) {
+        modal.title = "Failed!";
+        modal.body = message.content;
+        modal.showButton = true;
+      }
+    })
+    .catch((ex) => {
+      modal.title = "Error!";
+      modal.body = ex;
+      modal.showButton = true;
     });
 }
 
@@ -325,6 +455,27 @@ function startUpdate() {
 
 function removeFiled(word) {
   word.dictionaryID = null;
+}
+
+function openTainer()
+{
+  window.location = "/tain"
+}
+
+function isLastItem(item) {
+  var shownWords = getShownWords();
+  return shownWords[shownWords.length - 1] === item;
+}
+
+function getShownWords() {
+  var shownWords = [];
+  for (var i = 0; i < dictionary.content.words.length; i++) {
+    var currentWord = dictionary.content.words[i];
+    if (currentWord.dictionaryID != null) {
+      shownWords.push(currentWord);
+    }
+  }
+  return shownWords;
 }
 
 function addFlied() {
@@ -416,5 +567,12 @@ input:focus {
   margin: auto;
   margin-top: 0.5rem;
   margin-bottom: 3rem;
+}
+.dropdown-menu {
+  min-width: 2rem;
+  margin: 2px 0px 0px -16px !important;
+}
+.group-item {
+  margin: 0 auto;
 }
 </style>

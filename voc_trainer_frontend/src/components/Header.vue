@@ -112,7 +112,7 @@ function openLogin() {
   margin: auto;
 }
 .dummy {
-  height: 55px;
+  height: 58px;
 }
 .navbar {
   padding: unset;

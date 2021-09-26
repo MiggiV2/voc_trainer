@@ -19,7 +19,9 @@ import javax.ws.rs.core.SecurityContext;
 
 import com.google.gson.Gson;
 
+import de.mymiggi.voc.trainer.actions.BindDictionary;
 import de.mymiggi.voc.trainer.actions.DeleteDictionaryAction;
+import de.mymiggi.voc.trainer.actions.GetBondedDictionary;
 import de.mymiggi.voc.trainer.actions.GetDictionaryByIDAction;
 import de.mymiggi.voc.trainer.actions.GetPreviewAction;
 import de.mymiggi.voc.trainer.actions.SaveDictionaryAction;
@@ -30,6 +32,7 @@ import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.Dictionary;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
 import de.mymiggi.voc.trainer.entity.db.Words;
+import de.mymiggi.voc.trainer.manager.BondedDictionaryManager;
 import de.mymiggi.voc.trainer.manager.DictionaryEntryManager;
 import de.mymiggi.voc.trainer.manager.WordsManager;
 
@@ -41,6 +44,7 @@ public class DictionaryResource
 	public static final UniversalHibernateClient HIBERNATE_CLIENT = new UniversalHibernateClient();
 	public static final WordsManager WORDS_MANAGER = new WordsManager();
 	public static final DictionaryEntryManager DICTIONARY_MANAGER = new DictionaryEntryManager();
+	public static final BondedDictionaryManager BONDED_DICTIONARY_MANAGER = new BondedDictionaryManager();
 
 	@POST
 	@Path("search")
@@ -66,6 +70,14 @@ public class DictionaryResource
 		return new GetDictionaryByIDAction().run(id);
 	}
 
+	@GET
+	@Path("get/bonded-dictionary")
+	@RolesAllowed({ "user", "admin" })
+	public Response getBondedDictionary(@Context SecurityContext ctx)
+	{
+		return new GetBondedDictionary().run(new BuildUserFromContext().run(ctx));
+	}
+
 	@PUT
 	@Path("update/dictionary")
 	@RolesAllowed({ "user", "admin" })
@@ -80,6 +92,14 @@ public class DictionaryResource
 	public Response save(@Context SecurityContext ctx, Dictionary dictionary)
 	{
 		return new SaveDictionaryAction().run(dictionary, new BuildUserFromContext().run(ctx));
+	}
+
+	@PUT
+	@Path("bind")
+	@RolesAllowed({ "user", "admin" })
+	public Response bind(@Context SecurityContext ctx, @QueryParam("id") String id)
+	{
+		return new BindDictionary().run(id, new BuildUserFromContext().run(ctx));
 	}
 
 	@PUT
