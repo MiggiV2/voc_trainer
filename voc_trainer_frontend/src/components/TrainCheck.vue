@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box" v-if="!status.showTainer">
     <h2>Lets start!</h2>
     <hr />
     <h4>Select a dictionary</h4>
@@ -18,10 +18,10 @@
       </a>
     </p>
     <div v-if="status.bond">
-        <hr/>
-        <button class="btn btn-success">Start</button>
+      <hr />
+      <button @click="startTainer()" class="btn btn-success">Start</button>
     </div>
-</div>
+  </div>
   <!--HelpModal-->
   <div
     class="modal fade"
@@ -66,26 +66,48 @@ import Exclamation from "./icons/Exclamation.vue";
 import House from "./icons/House.vue";
 import Journal from "./icons/Journal.vue";
 
+var urlParams = new URLSearchParams(window.location.search);
+
 var status = reactive({
   bond: null,
+  dictionaryID: String,
+  showTainer: urlParams.has('id'),
 });
 
-fetch(HOST + "api/get/bonded-dictionary", {
-  credentails: "same-origin",
-  mode: "cors",
-  headers: {
-    Authorization: "Bearer " + getCookie("access_token"),
-    "Content-Type": "application/json",
-  },
-}).then((response) => {
-  if (response.status === 200) {
-    status.bond = true;
-    return response.json();
-    
-  } else if (response.status === 204) {
-    status.bond = false;
-  }
-});
+
+
+if(!status.showTainer)
+{
+  sendRequest();
+}
+
+function sendRequest() {
+  fetch(HOST + "api/get/bonded-dictionary", {
+    credentails: "same-origin",
+    mode: "cors",
+    headers: {
+      Authorization: "Bearer " + getCookie("access_token"),
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        status.bond = true;
+        return response.json();
+      } else if (response.status === 204) {
+        status.bond = false;
+      }
+    })
+    .then((response) => {
+      if (response != null) {
+        status.dictionaryID = response.dictionaryID;
+      }
+    });
+}
+
+function startTainer() {
+  window.location = "/train?id=" + status.dictionaryID;
+}
 </script>
 
 <style scoped>
