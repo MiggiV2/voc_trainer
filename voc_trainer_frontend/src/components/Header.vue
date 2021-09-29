@@ -7,7 +7,7 @@
         </a>
       </div>
       <div v-if="getCookie('access_token')" class="col-auto">
-        <a href="/train" title="Journal">
+        <a href="/train" title="Train a dictionary">
           <Journal />
         </a>
       </div>
@@ -39,7 +39,21 @@
             <Person v-else />
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Comming soon!</a></li>
+            <li>
+              <a class="dropdown-item" href="/train" title="Train page">
+                Train <Journal width="17" height="17"
+              /></a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/" title="Show your dictionarys">
+                Yours <Book />
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/" title="Show your marked words">
+                Saved <BookmarkCheckFill />
+              </a>
+            </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
               <a @click="logout()" class="dropdown-item text-danger" href="#">
@@ -68,6 +82,8 @@ import Journal from "./icons/Journal.vue";
 import Login from "./icons/Login.vue";
 import Logout from "./icons/Logout.vue";
 import Person from "./icons/Person.vue";
+import Book from "./icons/Book.vue";
+import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue"
 
 var appUser = reactive({
   username: String,
@@ -124,6 +140,7 @@ function openLogin() {
   padding-top: 0;
   top: 0px;
   right: 0px;
+  left: 0px;
   z-index: 100;
 }
 a {

@@ -1,65 +1,67 @@
 <template>
-  <div v-if="!show.success && !show.error" class="container box">
-    <form @submit.prevent="save" onsubmit="return false">
-      <h3 v-if="isEmpty(dictionary.name)" id="title">Add a new dictionary</h3>
-      <h3 v-else id="title">Add {{ dictionary.name }}</h3>
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control name"
-          placeholder="Enter a dictionary name"
-          v-model="dictionary.name"
-        />
-      </div>
-      <div v-for="(word, index) in dictionary.words" :key="index">
-        <div class="word" v-if="isUndefined(word)">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Englisch word"
-              v-model="word.eng"
-            />
-            <input
-              type="text"
-              class="form-control"
-              placeholder="German word"
-              v-model="word.ger"
-            />
-          </div>
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control name"
-              placeholder="(OPTIONAL) description, opposite, etc..."
-              v-model="word.op"
-            />
-            <div
-              v-if="index == dictionary.words.length - 1"
-              class="btn btn-primary"
-              @click="addFlied()"
-            >
-              <Plus />
+  <div class="wrapped">
+    <div v-if="!show.success && !show.error" class="container box">
+      <form @submit.prevent="save" onsubmit="return false">
+        <h3 v-if="isEmpty(dictionary.name)" id="title">Add a new dictionary</h3>
+        <h3 v-else id="title">Add {{ dictionary.name }}</h3>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control name"
+            placeholder="Enter a dictionary name"
+            v-model="dictionary.name"
+          />
+        </div>
+        <div v-for="(word, index) in dictionary.words" :key="index">
+          <div class="word" v-if="isUndefined(word)">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Englisch word"
+                v-model="word.eng"
+              />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="German word"
+                v-model="word.ger"
+              />
             </div>
-            <div v-else class="btn btn-danger" @click="removeFiled(index)">
-              <Dash />
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control name"
+                placeholder="(OPTIONAL) description, opposite, etc..."
+                v-model="word.op"
+              />
+              <div
+                v-if="index == dictionary.words.length - 1"
+                class="btn btn-primary"
+                @click="addFlied()"
+              >
+                <Plus />
+              </div>
+              <div v-else class="btn btn-danger" @click="removeFiled(index)">
+                <Dash />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <button
-        v-if="isEmpty(dictionary.name)"
-        type="submit"
-        class="btn btn-primary submit disabled"
-      >
-        Save
-        <SdCard />
-      </button>
-      <button v-else type="submit" class="btn btn-primary submit">
-        {{ button.content }}
-        <SdCard />
-      </button>
-    </form>
+        <button
+          v-if="isEmpty(dictionary.name)"
+          type="submit"
+          class="btn btn-primary submit disabled"
+        >
+          Save
+          <SdCard />
+        </button>
+        <button v-else type="submit" class="btn btn-primary submit">
+          {{ button.content }}
+          <SdCard />
+        </button>
+      </form>
+    </div>
   </div>
   <Toast
     v-if="show.success || show.error"
@@ -124,7 +126,7 @@ function addFlied() {
 }
 
 function save() {
-  button.content = '...'
+  button.content = "...";
   fetch(HOST + "api/save", {
     method: "PUT",
     credentails: "same-origin",
@@ -189,10 +191,14 @@ function isEmpty(_string1) {
 .form-group {
   margin-bottom: 1rem;
 }
-.container {
-  margin-top: 4rem;
-  text-align: center;
+.wrapped {
   max-width: 60rem;
+  margin: 4rem auto;
+}
+.container {
+  text-align: center;
+  margin: auto;
+  max-width: 98%;
 }
 input:focus {
   outline: none;

@@ -2,24 +2,26 @@
   <div class="preview-wrapped">
     <div v-if="preview.content.length == 0" class="spinner-border"></div>
     <div class="preview" v-for="(item, index) in preview.content" :key="index">
-      <a :href="'/read?id=' + item.id">
-        <div class="row">
-          <div class="col-auto">
-            <h2>{{ item.name }}</h2>
+      <div class="preview-item">
+        <a :href="'/read?id=' + item.id">
+          <div class="row">
+            <div class="col-auto">
+              <h2>{{ item.name }}</h2>
+            </div>
+            <div class="col"></div>
+            <div class="col-auto">
+              <img
+                v-if="item.userAvater != null && item.userAvater.length > 10"
+                class="avatar"
+                :src="getAvatar(item.userID, item.userAvater)"
+                :title="item.userName"
+              />
+            </div>
           </div>
-          <div class="col"></div>
-          <div class="col-auto">
-            <img
-              v-if="item.userAvater != null && item.userAvater.length > 10"
-              class="avatar"
-              :src="getAvatar(item.userID, item.userAvater)"
-              :title="item.userName"
-            />
-          </div>
-        </div>
-        <hr />
-        <p>By {{ item.userName }}</p>
-      </a>
+          <hr />
+          <p>By {{ item.userName }}</p>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -72,11 +74,15 @@ a:visited {
 .preview-wrapped {
   margin-bottom: 4rem;
 }
-.preview {
+.preview{
+  max-width: 50rem;
+  margin: auto;
+}
+.preview-item {
   border: solid 1px black;
   border-radius: 5px 10px 5px 10px;
   padding: 15px;
-  max-width: 50rem;
+  max-width: 98%;
   margin: 2rem auto 2rem;
   cursor: pointer;
 }
@@ -84,7 +90,7 @@ a:visited {
   max-height: 40px;
   border-radius: 5px;
 }
-.spinner-border{
+.spinner-border {
   margin-left: 45vw;
   margin-top: 2rem;
 }

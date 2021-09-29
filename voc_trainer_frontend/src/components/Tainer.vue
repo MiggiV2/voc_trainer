@@ -9,15 +9,16 @@
             <Bookmark />
           </button>
         </div>
-        <div class="col">
-          <div class="your-word">
-            <h5 v-if="dictionary.currentWord.showEng">
-              Your words is {{ dictionary.currentWord.eng }}
-            </h5>
-            <h5 v-else>Your words is {{ dictionary.currentWord.ger }}</h5>
-          </div>
-        </div>
-        <div class="col-auto">
+        <div class="mobile col"></div>
+        <div class="mobile col-auto">
+          <button
+            id="show-button"
+            class="btn btn-outline-primary top-buttons"
+            data-bs-toggle="modal"
+            data-bs-target="#helpWordModal"
+          >
+            <Eye />
+          </button>
           <button
             title="Skip"
             @click="setRandomWord()"
@@ -26,6 +27,37 @@
             <Arrow_Right_Circle />
           </button>
         </div>
+        <div class="col-md">
+          <div class="your-word">
+            <h5 v-if="anwser.show === 2">
+              Your definition / synonym:
+              <p>{{ dictionary.currentWord.op }}</p>
+            </h5>
+            <h5 v-else-if="anwser.show === 1">
+              Your words is {{ dictionary.currentWord.ger }}
+            </h5>
+            <h5 v-else>Your words is {{ dictionary.currentWord.eng }}</h5>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="desktop">
+            <button
+              id="show-button"
+              class="btn btn-outline-primary top-buttons"
+              data-bs-toggle="modal"
+              data-bs-target="#helpWordModal"
+            >
+              <Eye />
+            </button>
+            <button
+              title="Skip"
+              @click="setRandomWord()"
+              class="btn btn-danger top-buttons"
+            >
+              <Arrow_Right_Circle />
+            </button>
+          </div>
+        </div>
       </div>
       <form @submit.prevent="check" onsubmit="return false">
         <div class="input-group submit-form">
@@ -33,14 +65,14 @@
             type="text"
             class="form-control"
             placeholder="Englisch word"
-            v-model="dictionary.currentWord.input"
+            v-model="anwser.input"
           />
           <button type="submit" class="btn btn-success">Answer</button>
         </div>
         <div class="buttons"></div>
       </form>
-      <div v-if="dictionary.currentWord.isCorrect != null">
-        <div v-if="dictionary.currentWord.isCorrect" class="feedback correct">
+      <div v-if="anwser.isCorrect != null">
+        <div v-if="anwser.isCorrect" class="feedback correct">
           <h3>
             Correct!
             <EmojiWink />
@@ -55,26 +87,36 @@
       </div>
     </div>
   </div>
-  <!--
-    <button class="btn btn-outline-primary">
-      Help
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        fill="currentColor"
-        class="bi bi-question-circle"
-        viewBox="0 0 16 16"
-      >
-        <path
-          d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-        />
-        <path
-          d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"
-        />
-      </svg>
-    </button>
-  -->
+  <!--HelpModal-->
+  <div
+    class="modal fade"
+    id="helpWordModal"
+    tabindex="-1"
+    aria-labelledby="helpWordModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="helpWordModalLabel">Word help</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>The word is: {{ getAnwser() }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+            Thanks
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -85,6 +127,7 @@ import Bookmark from "./icons/Bookmark.vue";
 import Arrow_Right_Circle from "./icons/Arrow_Right_Circle.vue";
 import EmojiFrown from "./icons/EmojiFrown.vue";
 import EmojiWink from "./icons/EmojiWink.vue";
+import Eye from "./icons/Eye.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 
@@ -101,12 +144,17 @@ var dictionary = reactive({
     eng: "...",
     ger: "...",
     op: "...",
-    input: "",
-    showEng: true,
-    isCorrect: null,
   },
-  lastIndex: null,
 });
+
+var anwser = reactive({
+  input: "",
+  show: 0,
+  isCorrect: null,
+  lastWordIndex: null,
+});
+
+var startedHideThread = 0;
 
 if (urlParams.has("id")) {
   loadDictionary();
@@ -130,32 +178,52 @@ function loadDictionary() {
 }
 
 function check() {
-  var anwser = dictionary.currentWord.showEng
-    ? dictionary.currentWord.ger
-    : dictionary.currentWord.eng;
-  var isCorrect = anwser === dictionary.currentWord.input;
-  console.log(isCorrect);
+  var correctWord = getAnwser();
+  var isCorrect = correctWord === anwser.input;
   if (isCorrect) {
-    setRandomWord();
+    setTimeout(function () {
+      setRandomWord();
+    }, 800);
   }
-  dictionary.currentWord.isCorrect = isCorrect;
+  anwser.isCorrect = isCorrect;
+  startedHideThread = new Date();
+  var time = startedHideThread;
   setTimeout(function () {
-    dictionary.currentWord.isCorrect = null;
-  }, 3000);
+    if (time === startedHideThread) {
+      anwser.isCorrect = null;
+    } else {
+      console.log("Other thread stated!");
+    }
+  }, 2500);
+}
+
+function getAnwser() {
+  if (anwser.show === 2) {
+    return dictionary.currentWord.eng;
+  } else if (anwser.show === 1) {
+    return dictionary.currentWord.eng;
+  } else {
+    return dictionary.currentWord.ger;
+  }
 }
 
 function setRandomWord() {
   var randomIndex = Math.floor(Math.random() * dictionary.content.words.length);
   if (
-    dictionary.lastIndex !== null &&
-    dictionary.lastIndex === randomIndex &&
+    anwser.lastWordIndex !== null &&
+    anwser.lastWordIndex === randomIndex &&
     dictionary.content.words.length > 1
   ) {
-    console.log("Is same!");
+    console.log("Is same word -> new...");
+    setRandomWord();
+  } else {
+    anwser.lastWordIndex = randomIndex;
+    anwser.input = "";
+    var maxStatus = dictionary.currentWord.op === null ? 2 : 3;
+    dictionary.currentWord = dictionary.content.words[randomIndex];
+    anwser.show = Math.floor(Math.random() * maxStatus);
+    console.log(anwser.show);
   }
-  dictionary.currentWord.input = "";
-  dictionary.currentWord = dictionary.content.words[randomIndex];
-  dictionary.currentWord.showEng = Math.floor(Math.random() * 2) === 0;
 }
 </script>
 
@@ -182,22 +250,24 @@ function setRandomWord() {
   margin-bottom: 1rem;
 }
 .your-word {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 .top-buttons {
   margin-top: -10px;
 }
 form {
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 input:focus {
-  outline:none;
+  outline: none;
   box-shadow: none;
 }
 .feedback {
   max-width: 10rem;
   padding: 2px;
   margin: auto;
+  margin-bottom: 2rem;
   border: solid 0 black;
   border-radius: 5px;
 }
@@ -208,5 +278,27 @@ input:focus {
 .wrong {
   background-color: #dc3545;
   color: white;
+}
+#show-button {
+  margin-right: 0.5rem;
+}
+.mobile {
+  display: none;
+}
+/* Triggered on boostrap md breakpoint */
+@media (max-width: 768px) {
+  .mobile {
+    display: unset;
+    margin-bottom: 2rem;
+  }
+  .desktop {
+    display: none;
+  }
+  .wrapped-box{
+    max-width: 99vw;
+  }
+  .submit-form {
+    min-width: 85vw;
+  }
 }
 </style>

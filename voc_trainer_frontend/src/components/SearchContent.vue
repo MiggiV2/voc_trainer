@@ -1,23 +1,25 @@
 <template>
   <div class="preview-wrapped">
     <div class="preview" v-for="(item, index) in preview.content" :key="index">
-      <a :href="'/read?id=' + item.id">
-        <div class="row">
-          <div class="col-auto">
-            <h2>{{ item.name }}</h2>
+      <div class="preview-item">
+        <a :href="'/read?id=' + item.id">
+          <div class="row">
+            <div class="col-auto">
+              <h2>{{ item.name }}</h2>
+            </div>
+            <div class="col"></div>
+            <div class="col-auto">
+              <img
+                v-if="item.userAvater != null && item.userAvater.length > 10"
+                class="avatar"
+                :src="getAvatar(item.userID, item.userAvater)"
+              />
+            </div>
           </div>
-          <div class="col"></div>
-          <div class="col-auto">
-            <img
-            v-if="(item.userAvater != null && item.userAvater.length > 10)"
-              class="avatar"
-              :src="getAvatar(item.userID, item.userAvater)"
-            />
-          </div>
-        </div>
-        <hr />
-        <p>By {{ item.userName }}</p>
-      </a>
+          <hr />
+          <p>By {{ item.userName }}</p>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -84,12 +86,16 @@ a:visited {
 .preview-wrapped {
   margin-bottom: 4rem;
 }
-.preview {
+.preview{
+  margin: 2rem auto 2rem;
+  max-width: 50rem;
+}
+.preview-item {
   border: solid 1px black;
   border-radius: 5px 10px 5px 10px;
   padding: 15px;
-  max-width: 50rem;
-  margin: 2rem auto 2rem;
+  max-width: 98%;
+  margin: auto;
   cursor: pointer;
 }
 .avatar {

@@ -1,151 +1,160 @@
 <template>
   <!--data-bs-toggle="modal" data-bs-target="#editModal"-->
-  <div v-if="show.content === null" class="dictionary">
-    <div class="row header" v-if="dictionary.content.user != null">
-      <div class="col-1">
-        <img
-          class="avatar"
-          v-if="dictionary.content.user.avatarURL != null"
-          :src="dictionary.content.user.avatarURL"
-          :title="dictionary.content.user.name"
-        />
-      </div>
-      <div class="col">
-        <h3 class="title">
-          {{ dictionary.content.name }}
-          <a> by {{ dictionary.content.user.name }}</a>
-        </h3>
-      </div>
-      <div class="col-1 btn-group" role="group">
-        <div
-          class="group-item"
-          role="button"
-          @click="sendBindRequest()"
-          v-if="!show.edit"
-          data-bs-toggle="modal"
-          data-bs-target="#updatedModal"
-        >
-          <Journal />
+  <div class="dictionary-wrapped">
+    <div v-if="show.content === null" class="dictionary">
+      <div class="row header" v-if="dictionary.content.user != null">
+        <div class="col-auto">
+          <img
+            class="avatar"
+            v-if="dictionary.content.user.avatarURL != null"
+            :src="dictionary.content.user.avatarURL"
+            :title="dictionary.content.user.name"
+          />
         </div>
-        <div class="group-item" v-if="isYours()">
-          <div v-if="!show.edit">
+        <div class="col">
+          <h3 class="title">
+            {{ dictionary.content.name }}
+            <a class="desktop"> by {{ dictionary.content.user.name }}</a>
+          </h3>
+          <p class="mobile">by {{ dictionary.content.user.name }}</p>
+        </div>
+        <div class="col-auto">
+          <div class="btn-group" role="group">
             <div
-              id="navbarDropdown"
+              class="group-item"
               role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <Gear />
-            </div>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <button
-                  class="dropdown-item btn btn-danger btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                >
-                  <Trash />
-                </button>
-              </li>
-              <li>
-                <button
-                  class="dropdown-item btn btn-primary btn-sm update-button"
-                  @click="edit()"
-                >
-                  <Pencil />
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div v-else>
-            <button class="btn btn-danger btn-sm" @click="cancel()">
-              <Cross />
-            </button>
-            <button
-              class="btn btn-success btn-sm update-button"
-              @click="startUpdate()"
+              @click="sendBindRequest()"
+              v-if="!show.edit"
+              title="Set this as your training dictionary"
               data-bs-toggle="modal"
               data-bs-target="#updatedModal"
             >
-              <Check />
-            </button>
+              <Journal />
+            </div>
+            <div class="group-item" v-if="isYours()">
+              <div v-if="!show.edit">
+                <div
+                  id="navbarDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  title="Options"
+                >
+                  <Gear />
+                </div>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <button
+                      class="dropdown-item btn btn-danger btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteModal"
+                      title="Delete"
+                    >
+                      <Trash />
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="dropdown-item btn btn-primary btn-sm"
+                      @click="edit()"
+                      title="Update"
+                    >
+                      <Pencil />
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div v-else>
+                <button class="btn btn-danger btn-sm update-button" @click="cancel()">
+                  <Cross />
+                </button>
+                <button
+                  class="btn btn-success btn-sm update-button"
+                  @click="startUpdate()"
+                  data-bs-toggle="modal"
+                  data-bs-target="#updatedModal"
+                >
+                  <Check />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="sub-title">
-      <a>Englisch &lt;--&gt; German</a>
-    </div>
-    <div
-      v-if="dictionary.content.words.length == 0"
-      class="spinner-border"
-    ></div>
-    <div
-      class="words"
-      v-for="(item, index) in dictionary.content.words"
-      :key="index"
-    >
-      <div v-if="item.dictionaryID != null">
-        <div v-if="show.edit">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Englisch word"
-              v-model="item.eng"
-            />
-            <input
-              type="text"
-              class="form-control"
-              placeholder="German word"
-              v-model="item.ger"
-            />
-          </div>
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="(OPTIONAL) description, opposite, etc..."
-              v-model="item.op"
-            />
-            <div
-              v-if="isLastItem(item)"
-              class="btn btn-outline-secondary"
-              @click="addFlied()"
-            >
-              <Plus />
+      <div class="sub-title">
+        <a>Englisch &lt;--&gt; German</a>
+      </div>
+      <div
+        v-if="dictionary.content.words.length == 0"
+        class="spinner-border"
+      ></div>
+      <div
+        class="words"
+        v-for="(item, index) in dictionary.content.words"
+        :key="index"
+      >
+        <div v-if="item.dictionaryID != null">
+          <div v-if="show.edit">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Englisch word"
+                v-model="item.eng"
+              />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="German word"
+                v-model="item.ger"
+              />
             </div>
-            <div class="btn btn-outline-secondary" @click="removeFiled(item)">
-              <Dash />
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="(OPTIONAL) description, opposite, etc..."
+                v-model="item.op"
+              />
+              <div
+                v-if="isLastItem(item)"
+                class="btn btn-outline-secondary"
+                @click="addFlied()"
+              >
+                <Plus />
+              </div>
+              <div class="btn btn-outline-secondary" @click="removeFiled(item)">
+                <Dash />
+              </div>
             </div>
           </div>
-        </div>
-        <div v-else>
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Englisch word"
-              v-model="item.eng"
-              readonly
-            />
-            <input
-              type="text"
-              class="form-control"
-              placeholder="German word"
-              v-model="item.ger"
-              readonly
-            />
-          </div>
-          <div class="input-group">
-            <input
-              v-if="showItem(item)"
-              type="text"
-              class="form-control"
-              placeholder="(OPTIONAL) description, opposite, etc..."
-              v-model="item.op"
-              readonly
-            />
+          <div v-else>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Englisch word"
+                v-model="item.eng"
+                readonly
+              />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="German word"
+                v-model="item.ger"
+                readonly
+              />
+            </div>
+            <div class="input-group">
+              <input
+                v-if="showItem(item)"
+                type="text"
+                class="form-control"
+                placeholder="(OPTIONAL) description, opposite, etc..."
+                v-model="item.op"
+                readonly
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -417,7 +426,7 @@ function sendBindRequest() {
       if (response.ok) {
         sendRequest();
         modal.title = "Done!";
-        modal.body = "You have bond this dictionary!";
+        modal.body = "You have bond this dictionary! Now you can go the the Train-Tab (Journal-Icon)";
         modal.showButton = true;
         modal.funcToRun = openTainer;
         console.log(modal.funcToRun);
@@ -457,9 +466,8 @@ function removeFiled(word) {
   word.dictionaryID = null;
 }
 
-function openTainer()
-{
-  window.location = "/tain"
+function openTainer() {
+  window.location = "/tain";
 }
 
 function isLastItem(item) {
@@ -525,10 +533,14 @@ function isYours() {
 </script>
 
 <style scoped>
+.dictionary-wrapped {
+  margin: auto;
+  max-width: 60rem;
+}
 .dictionary {
   border: solid black 1px;
   border-radius: 10px 5px 10px 5px;
-  max-width: 60rem;
+  max-width: 98%;
   margin: 4rem auto;
   text-align: center;
 }
@@ -559,9 +571,11 @@ input:focus {
   height: 45px;
   border: solid 0;
   border-radius: 5px;
+  margin-left: 5px;
 }
 .update-button {
   margin-top: 0.5rem;
+  margin-left: 0.8rem;
 }
 .spinner-border {
   margin: auto;
@@ -574,5 +588,38 @@ input:focus {
 }
 .group-item {
   margin: 0 auto;
+}
+.mobile {
+  display: none;
+}
+.desktop {
+  color: unset;
+  text-decoration: unset;
+}
+.desktop :hover {
+  color: unset;
+  text-decoration: unset;
+}
+.group-item {
+  margin-right: 0.5rem;
+  margin-left: 0.3rem;
+}
+/* Triggered on boostrap md breakpoint */
+@media (max-width: 768px) {
+  .mobile {
+    display: unset;
+    margin-bottom: 1rem;
+  }
+  .desktop {
+    display: none;
+  }
+  .dictionary-wrapped {
+    margin: auto;
+    max-width: 97vw;
+  }
+  .dictionary {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
 }
 </style>
