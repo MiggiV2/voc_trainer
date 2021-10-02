@@ -3,35 +3,32 @@ package de.mymiggi.voc.trainer.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.mymiggi.voc.trainer.DictionaryResource;
-import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 import de.mymiggi.voc.trainer.entity.db.Words;
 
-public class WordsManager
+public class WordsManager extends BasicManager<Words>
 {
-	private List<Words> dictionarys = new ArrayList<Words>();
-
 	public WordsManager()
 	{
-		syncList();
-		startUpdateThread();
+		super(Words.class);
 	}
 
-	public void syncList()
+	public Words getWordsByID(int id)
 	{
-		this.dictionarys = DictionaryResource.HIBERNATE_CLIENT.getList(Words.class);
-	}
-
-	public List<Words> getList()
-	{
-		return this.dictionarys;
+		for (Words temp : getEntrys())
+		{
+			if (temp.getID() == id)
+			{
+				return temp;
+			}
+		}
+		return null;
 	}
 
 	public List<Words> getWordsByDictionary(DictionaryEntry entry)
 	{
 		List<Words> dictionary = new ArrayList<Words>();
-		for (Words temp : getList())
+		for (Words temp : getEntrys())
 		{
 			if (temp.getDictionaryID() != null && entry.getID().equals(temp.getDictionaryID()))
 			{
@@ -39,31 +36,5 @@ public class WordsManager
 			}
 		}
 		return dictionary;
-	}
-
-	private void startUpdateThread()
-	{
-		Thread thread = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				boolean running = true;
-				while (running)
-				{
-					try
-					{
-						Thread.sleep(30 * 60 * 1000);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					new CleanDataBaseAction().run();
-					syncList();
-				}
-			}
-		};
-		thread.start();
 	}
 }

@@ -23,7 +23,7 @@ public class SearchDictionaryAction
 		{
 			return Response.status(Status.BAD_REQUEST).entity("Need \"query\": in body!").build();
 		}
-		List<DictionaryEntry> allEntrys = DictionaryResource.DICTIONARY_MANAGER.getList();
+		List<DictionaryEntry> allEntrys = DictionaryResource.DICTIONARY_MANAGER.getEntrys();
 		Map<DictionaryEntry, Integer> hitMap = new HashMap<DictionaryEntry, Integer>();
 		for (DictionaryEntry current : allEntrys)
 		{

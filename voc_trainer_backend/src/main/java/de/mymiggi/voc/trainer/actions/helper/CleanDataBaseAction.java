@@ -11,8 +11,8 @@ public class CleanDataBaseAction
 {
 	public void run()
 	{
-		List<DictionaryEntry> dictionaryEntries = DictionaryResource.DICTIONARY_MANAGER.getList();
-		List<Words> wordsEntries = DictionaryResource.WORDS_MANAGER.getList();
+		List<DictionaryEntry> dictionaryEntries = DictionaryResource.DICTIONARY_MANAGER.getEntrys();
+		List<Words> wordsEntries = DictionaryResource.WORDS_MANAGER.getEntrys();
 		List<Words> toDelete = new ArrayList<Words>();
 		wordsEntries.stream()
 			.filter(word -> !dictionaryExists(word, dictionaryEntries) || word.getEng().isBlank() || word.getGer().isBlank())

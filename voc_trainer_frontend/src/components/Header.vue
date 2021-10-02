@@ -83,7 +83,7 @@ import Login from "./icons/Login.vue";
 import Logout from "./icons/Logout.vue";
 import Person from "./icons/Person.vue";
 import Book from "./icons/Book.vue";
-import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue"
+import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue";
 
 var appUser = reactive({
   username: String,
@@ -167,5 +167,13 @@ div {
   top: unset;
   left: unset;
   right: 5px;
+}
+@media (max-width: 768px) {
+  .container {
+    max-width: 100vw;
+    margin: auto;
+    padding: unset;
+    padding-left: 10px;
+  }
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
   <div class="footer-wrapped">
     <div class="row footer">
-      <div class="col-auto">
+      <div class="col-auto desktop">
         <Discord />
       </div>
-      <div class="col-auto">
+      <div class="col-auto desktop">
         <a :href="botURL">Discord-Bot</a>
       </div>
-      <div class="col-auto">
+      <div class="col-auto desktop">
         <a :href="serverURL">Discord-Server</a>
         </div>
       <div class="col"></div>
@@ -52,5 +52,10 @@ a:link {
 a:visited {
   color: unset;
   text-decoration: none;
+}
+@media (max-width: 768px) {
+  .desktop {
+    display: none;
+  }
 }
 </style>

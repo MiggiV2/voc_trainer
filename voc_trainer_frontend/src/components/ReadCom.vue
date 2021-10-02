@@ -24,7 +24,7 @@
               class="group-item"
               role="button"
               @click="sendBindRequest()"
-              v-if="!show.edit"
+              v-if="!show.edit && getCookie('access_token')"
               title="Set this as your training dictionary"
               data-bs-toggle="modal"
               data-bs-target="#updatedModal"
@@ -534,7 +534,7 @@ function isYours() {
 
 <style scoped>
 .dictionary-wrapped {
-  margin: auto;
+  margin: 0 auto 8rem;
   max-width: 60rem;
 }
 .dictionary {
@@ -614,7 +614,6 @@ input:focus {
     display: none;
   }
   .dictionary-wrapped {
-    margin: auto;
     max-width: 97vw;
   }
   .dictionary {

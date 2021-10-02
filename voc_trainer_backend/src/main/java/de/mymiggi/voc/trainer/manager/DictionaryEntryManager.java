@@ -1,34 +1,18 @@
 package de.mymiggi.voc.trainer.manager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.mymiggi.voc.trainer.DictionaryResource;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 
-public class DictionaryEntryManager
+public class DictionaryEntryManager extends BasicManager<DictionaryEntry>
 {
-	private List<DictionaryEntry> dictionarys = new ArrayList<DictionaryEntry>();
 
 	public DictionaryEntryManager()
 	{
-		syncList();
-		startUpdateThread();
-	}
-
-	public void syncList()
-	{
-		this.dictionarys = DictionaryResource.HIBERNATE_CLIENT.getList(DictionaryEntry.class);
-	}
-
-	public List<DictionaryEntry> getList()
-	{
-		return this.dictionarys;
+		super(DictionaryEntry.class);
 	}
 
 	public DictionaryEntry getByID(String id)
 	{
-		for (DictionaryEntry temp : dictionarys)
+		for (DictionaryEntry temp : getEntrys())
 		{
 			if (temp.getID().equals(id))
 			{
@@ -36,30 +20,5 @@ public class DictionaryEntryManager
 			}
 		}
 		return null;
-	}
-
-	private void startUpdateThread()
-	{
-		Thread thread = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				boolean running = true;
-				while (running)
-				{
-					try
-					{
-						Thread.sleep(30 * 60 * 1000);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					syncList();
-				}
-			}
-		};
-		thread.start();
 	}
 }

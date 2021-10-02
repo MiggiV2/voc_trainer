@@ -4,18 +4,7 @@
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Search term" v-model="request.query" />
       <button type="submit" class="btn btn-primary">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="currentColor"
-          class="bi bi-search"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-          />
-        </svg>
+        <Search />
       </button>
     </div>
     </form>
@@ -24,14 +13,19 @@
 
 <script setup>
 import { reactive } from "vue";
+
+import Search from "./icons/Search.vue";
+
 var urlParams = new URLSearchParams(window.location.search);
 var request = reactive({
   query: "",
 });
+
 if(urlParams.has('query'))
 {
   request.query = urlParams.get('query');
 }
+
 function search()
 {
   request.query = request.query.replace(/ /g,'');
@@ -52,5 +46,10 @@ input:focus {
 }
 .container {
   margin-top: 3rem;
+}
+@media (max-width: 768px) {
+  .container {
+    max-width: 100vw;
+  }
 }
 </style>

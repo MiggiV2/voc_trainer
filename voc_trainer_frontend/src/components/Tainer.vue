@@ -8,16 +8,22 @@
           <button title="Save this word" class="btn btn-primary top-buttons">
             <Bookmark />
           </button>
-        </div>
-        <div class="mobile col"></div>
-        <div class="mobile col-auto">
           <button
-            id="show-button"
-            class="btn btn-outline-primary top-buttons"
+            class="btn btn-outline-primary top-buttons show-button"
             data-bs-toggle="modal"
             data-bs-target="#helpWordModal"
           >
             <Eye />
+          </button>
+        </div>
+        <div class="mobile col"></div>
+        <div class="mobile col-auto">
+          <button
+            class="btn btn-primary top-buttons settings-button"
+            data-bs-toggle="modal"
+            data-bs-target="#settingsdModal"
+          >
+            <Gear />
           </button>
           <button
             title="Skip"
@@ -42,12 +48,12 @@
         <div class="col-auto">
           <div class="desktop">
             <button
-              id="show-button"
-              class="btn btn-outline-primary top-buttons"
+              class="btn btn-primary top-buttons settings-button"
               data-bs-toggle="modal"
-              data-bs-target="#helpWordModal"
+              data-bs-target="#settingsdModal"
+              @click="setCheck()"
             >
-              <Eye />
+              <Gear />
             </button>
             <button
               title="Skip"
@@ -117,6 +123,72 @@
       </div>
     </div>
   </div>
+  <!--Settings-Modal-->
+  <div
+    class="modal fade"
+    id="settingsdModal"
+    tabindex="-1"
+    aria-labelledby="settingsdModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="settingsdModalLabel">Settings</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Ask Settings:</p>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="flexRadioDefault"
+              id="flexRadioDefault1"
+              @click="updateAskSettings(0)"
+            />
+            <label class="form-check-label" for="flexRadioDefault1">
+              Only englisch words
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="flexRadioDefault"
+              id="flexRadioDefault2"
+              @click="updateAskSettings(1)"
+            />
+            <label class="form-check-label" for="flexRadioDefault2">
+              Only german words
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="flexRadioDefault"
+              id="flexRadioDefault3"
+              @click="updateAskSettings(2)"
+            />
+            <label class="form-check-label" for="flexRadioDefault3">
+              Ask both &amp; definition / synonym
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -128,6 +200,7 @@ import Arrow_Right_Circle from "./icons/Arrow_Right_Circle.vue";
 import EmojiFrown from "./icons/EmojiFrown.vue";
 import EmojiWink from "./icons/EmojiWink.vue";
 import Eye from "./icons/Eye.vue";
+import Gear from "./icons/Gear.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 
@@ -154,10 +227,37 @@ var anwser = reactive({
   lastWordIndex: null,
 });
 
+var settings = reactive({
+  ask: 2,
+});
+
 var startedHideThread = 0;
+
+if (localStorage.getItem("settings.ask")) {
+  settings.ask = localStorage.getItem("settings.ask");
+} else {
+  localStorage.setItem("settings.ask", 2);
+  console.log("Set item!");
+}
 
 if (urlParams.has("id")) {
   loadDictionary();
+}
+
+function updateAskSettings(askStatus) {
+  settings.ask = askStatus;
+  localStorage.setItem("settings.ask", askStatus);
+}
+
+function setCheck() {
+  if (settings.ask == 0) {
+    document.getElementById("flexRadioDefault1").setAttribute("checked", true);
+  } else if (settings.ask == 1) {
+    document.getElementById("flexRadioDefault2").setAttribute("checked", true);
+  } else {
+    document.getElementById("flexRadioDefault3").setAttribute("checked", true);
+  }
+  console.log(settings.ask);
 }
 
 function loadDictionary() {
@@ -172,7 +272,7 @@ function loadDictionary() {
     .then((response) => {
       if (response != null) {
         dictionary.content = response;
-        setRandomWord();
+        setRandomWord(0);
       }
     });
 }
@@ -182,7 +282,7 @@ function check() {
   var isCorrect = correctWord === anwser.input;
   if (isCorrect) {
     setTimeout(function () {
-      setRandomWord();
+      setRandomWord(0);
     }, 800);
   }
   anwser.isCorrect = isCorrect;
@@ -207,22 +307,35 @@ function getAnwser() {
   }
 }
 
-function setRandomWord() {
+function setRandomWord(counter) {
   var randomIndex = Math.floor(Math.random() * dictionary.content.words.length);
   if (
     anwser.lastWordIndex !== null &&
     anwser.lastWordIndex === randomIndex &&
-    dictionary.content.words.length > 1
+    dictionary.content.words.length > 1 &&
+    counter < 100
   ) {
     console.log("Is same word -> new...");
-    setRandomWord();
+    setRandomWord(counter++);
   } else {
     anwser.lastWordIndex = randomIndex;
     anwser.input = "";
-    var maxStatus = dictionary.currentWord.op === null ? 2 : 3;
     dictionary.currentWord = dictionary.content.words[randomIndex];
+    setShownStatus();
+  }
+}
+
+function setShownStatus() {
+  if (settings.ask == 0) {
+    anwser.show = 0;
+  } else if (settings.ask == 1) {
+    anwser.show = 1;
+  } else {
+    var isOpEmpty =
+      dictionary.currentWord.op === null ||
+      dictionary.currentWord.op.length == 0;
+    var maxStatus = isOpEmpty ? 2 : 3;
     anwser.show = Math.floor(Math.random() * maxStatus);
-    console.log(anwser.show);
   }
 }
 </script>
@@ -279,8 +392,11 @@ input:focus {
   background-color: #dc3545;
   color: white;
 }
-#show-button {
+.settings-button {
   margin-right: 0.5rem;
+}
+.show-button {
+  margin-left: 0.5rem;
 }
 .mobile {
   display: none;
@@ -289,12 +405,12 @@ input:focus {
 @media (max-width: 768px) {
   .mobile {
     display: unset;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   .desktop {
     display: none;
   }
-  .wrapped-box{
+  .wrapped-box {
     max-width: 99vw;
   }
   .submit-form {

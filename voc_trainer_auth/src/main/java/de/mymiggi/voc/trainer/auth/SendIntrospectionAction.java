@@ -2,15 +2,14 @@ package de.mymiggi.voc.trainer.auth;
 
 import java.io.IOException;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
 
 import de.mymiggi.voc.trainer.AuthResource;
-import de.mymiggi.voc.trainer.entity.DiscordResponse;
+import de.mymiggi.voc.trainer.entity.response.AuthResponse;
+import de.mymiggi.voc.trainer.entity.response.DiscordResponse;
+import de.mymiggi.voc.trainer.entity.response.UnauthorizedResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -18,17 +17,8 @@ public class SendIntrospectionAction
 {
 	private static final Logger logger = Logger.getLogger(SendIntrospectionAction.class);
 
-	public Response run(String body, String url)
+	public AuthResponse run(String token, String url)
 	{
-		String[] params = body.split("&");
-		String token = "";
-		for (String param : params)
-		{
-			if (param.startsWith("token"))
-			{
-				token = param.split("=")[1];
-			}
-		}
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
 			.url(url)
@@ -42,27 +32,28 @@ public class SendIntrospectionAction
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getCause()).build();
+			logger.error("Failed to send request!", e);
+			return null;
 		}
 	}
 
-	private Response handleResponse(okhttp3.Response response) throws IOException
+	private AuthResponse handleResponse(okhttp3.Response response) throws IOException
 	{
 		if (response.code() == 401)
 		{
 			response.close();
-			return Response.ok("{\"active\":false}").build();
+			return new UnauthorizedResponse();
 		}
 		else
 		{
 			int code = response.code();
-			DiscordResponse discordResponse = new Gson().fromJson(response.body().string(), DiscordResponse.class);
+			String body = response.body().string();
 			response.close();
+			DiscordResponse discordResponse = new Gson().fromJson(body, DiscordResponse.class);
 			String role = (AuthResource.admins.contains(discordResponse.getID())) ? "admin" : "user";
 			logger.info("Role:" + role);
-			discordResponse.setRole(role);
-			return Response.status(code).entity(discordResponse).build();
+			discordResponse.setRole(role).setCode(code);
+			return discordResponse;
 		}
 	}
 }

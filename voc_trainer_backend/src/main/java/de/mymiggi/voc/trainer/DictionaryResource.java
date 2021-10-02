@@ -19,6 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import com.google.gson.Gson;
 
+import de.mymiggi.voc.trainer.actions.AddSpecialWordAction;
 import de.mymiggi.voc.trainer.actions.BindDictionary;
 import de.mymiggi.voc.trainer.actions.DeleteDictionaryAction;
 import de.mymiggi.voc.trainer.actions.GetBondedDictionary;
@@ -31,9 +32,11 @@ import de.mymiggi.voc.trainer.actions.helper.BuildUserFromContext;
 import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.Dictionary;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
+import de.mymiggi.voc.trainer.entity.db.SpecialWord;
 import de.mymiggi.voc.trainer.entity.db.Words;
 import de.mymiggi.voc.trainer.manager.BondedDictionaryManager;
 import de.mymiggi.voc.trainer.manager.DictionaryEntryManager;
+import de.mymiggi.voc.trainer.manager.SpecialWordManager;
 import de.mymiggi.voc.trainer.manager.WordsManager;
 
 @Path("/api")
@@ -45,6 +48,7 @@ public class DictionaryResource
 	public static final WordsManager WORDS_MANAGER = new WordsManager();
 	public static final DictionaryEntryManager DICTIONARY_MANAGER = new DictionaryEntryManager();
 	public static final BondedDictionaryManager BONDED_DICTIONARY_MANAGER = new BondedDictionaryManager();
+	public static final SpecialWordManager SPECIAL_WORD_MANAGER = new SpecialWordManager();
 
 	@POST
 	@Path("search")
@@ -92,6 +96,14 @@ public class DictionaryResource
 	public Response save(@Context SecurityContext ctx, Dictionary dictionary)
 	{
 		return new SaveDictionaryAction().run(dictionary, new BuildUserFromContext().run(ctx));
+	}
+
+	@PUT
+	@Path("add/special-word")
+	@RolesAllowed({ "user", "admin" })
+	public Response addSpecialWord(@Context SecurityContext ctx, SpecialWord specialWord)
+	{
+		return new AddSpecialWordAction().run(new BuildUserFromContext().run(ctx), specialWord);
 	}
 
 	@PUT

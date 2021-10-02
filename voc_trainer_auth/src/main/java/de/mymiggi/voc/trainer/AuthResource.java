@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.mymiggi.voc.trainer.auth.SendIntrospectionAction;
+import de.mymiggi.voc.trainer.auth.IntrospectionAction;
 
 @Path("/oauth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,6 +29,6 @@ public class AuthResource
 	@PermitAll
 	public Response search(String body)
 	{
-		return new SendIntrospectionAction().run(body, introspectionURL);
+		return new IntrospectionAction().run(body, introspectionURL);
 	}
 }

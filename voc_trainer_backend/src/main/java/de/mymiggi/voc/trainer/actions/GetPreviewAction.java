@@ -12,7 +12,7 @@ public class GetPreviewAction
 {
 	public Response run()
 	{
-		List<DictionaryEntry> allEntrys = DictionaryResource.DICTIONARY_MANAGER.getList();
+		List<DictionaryEntry> allEntrys = DictionaryResource.DICTIONARY_MANAGER.getEntrys();
 		List<DictionaryEntry> entrys = new ArrayList<DictionaryEntry>();
 		if (allEntrys.size() < 5)
 		{

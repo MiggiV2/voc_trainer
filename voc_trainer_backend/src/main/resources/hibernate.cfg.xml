@@ -25,5 +25,6 @@
         <mapping class="de.mymiggi.voc.trainer.entity.db.Words"/>
         <mapping class="de.mymiggi.voc.trainer.entity.db.DictionaryEntry"/>
         <mapping class="de.mymiggi.voc.trainer.entity.db.BondedDictionary"/>
+        <mapping class="de.mymiggi.voc.trainer.entity.db.SpecialWord"/>
     </session-factory>
 </hibernate-configuration>

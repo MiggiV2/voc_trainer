@@ -1,6 +1,6 @@
 <template>
   <div class="wrapped">
-    <div class="box" v-if="!getCookie('access_token')">
+    <div class="box" v-if="!getCookie('access_token') && !status.showTainer">
       <h1 class="text-danger">Please login first!</h1>
     </div>
     <div class="box" v-if="!status.showTainer">
@@ -145,7 +145,7 @@ function startTainer() {
   border: solid black 1px;
   border-radius: 5px 10px 5px 10px;
   max-width: 98%;
-  margin: auto;
+  margin: 4rem auto;
   text-align: center;
   padding: 5px;
 }

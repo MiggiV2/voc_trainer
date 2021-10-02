@@ -16,8 +16,8 @@ public class GetDictionaryByIDAction
 {
 	public Response run(String id)
 	{
-		List<DictionaryEntry> dictionaryEntries = DictionaryResource.DICTIONARY_MANAGER.getList();
-		List<Words> wordsEntries = DictionaryResource.WORDS_MANAGER.getList();
+		List<DictionaryEntry> dictionaryEntries = DictionaryResource.DICTIONARY_MANAGER.getEntrys();
+		List<Words> wordsEntries = DictionaryResource.WORDS_MANAGER.getEntrys();
 
 		DictionaryEntry dictionary = getDictionaryByID(id, dictionaryEntries);
 

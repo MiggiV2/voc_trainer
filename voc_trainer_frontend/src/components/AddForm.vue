@@ -193,7 +193,7 @@ function isEmpty(_string1) {
 }
 .wrapped {
   max-width: 60rem;
-  margin: 4rem auto;
+  margin: 4rem auto 8rem;
 }
 .container {
   text-align: center;
