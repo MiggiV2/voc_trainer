@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response.Status;
 import de.mymiggi.voc.trainer.DictionaryResource;
 import de.mymiggi.voc.trainer.entity.Dictionary;
 import de.mymiggi.voc.trainer.entity.ShortMessageResponse;
+import de.mymiggi.voc.trainer.entity.WordsResponse;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 import de.mymiggi.voc.trainer.entity.db.Words;
 
@@ -28,12 +29,23 @@ public class GetDictionaryByIDAction
 		}
 
 		List<Words> words = getWordsByDictionar(dictionary, wordsEntries);
+		List<WordsResponse> wordsResponses = new ArrayList<WordsResponse>();
+
+		words.forEach(item -> createWordResponse(dictionary.getUserID(), wordsResponses, item));
 
 		Dictionary response = new Dictionary()
 			.setDictionaryEntry(dictionary)
-			.setWords(words.stream().toArray(Words[]::new));
+			.setWords(wordsResponses.stream().toArray(WordsResponse[]::new));
 
 		return Response.ok(response).build();
+	}
+
+	private void createWordResponse(String id, List<WordsResponse> wordsResponses, Words item)
+	{
+		WordsResponse toAdd = new WordsResponse(item);
+		boolean isSpecialWord = DictionaryResource.SPECIAL_WORD_MANAGER.isSpecialWord(id, item);
+		toAdd.setSpecialWord(isSpecialWord);
+		wordsResponses.add(toAdd);
 	}
 
 	private List<Words> getWordsByDictionar(DictionaryEntry dictionary, List<Words> wordsEntries)

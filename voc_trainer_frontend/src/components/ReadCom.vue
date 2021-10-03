@@ -23,6 +23,17 @@
             <div
               class="group-item"
               role="button"
+              v-if="!show.edit && getCookie('access_token')"
+              title="Train this dictionary"
+              data-bs-toggle="modal"
+              data-bs-target="#trainModal"
+            >
+              <Journal />
+            </div>
+            <!--
+              <div
+              class="group-item"
+              role="button"
               @click="sendBindRequest()"
               v-if="!show.edit && getCookie('access_token')"
               title="Set this as your training dictionary"
@@ -31,6 +42,16 @@
             >
               <Journal />
             </div>
+              <div
+              class="group-item"
+              role="button"
+              @click="openTainer()"
+              v-else
+              title="Start training this dictionary"
+            >
+              <Journal />
+              </div>
+            -->
             <div class="group-item" v-if="isYours()">
               <div v-if="!show.edit">
                 <div
@@ -65,7 +86,10 @@
                 </ul>
               </div>
               <div v-else>
-                <button class="btn btn-danger btn-sm update-button" @click="cancel()">
+                <button
+                  class="btn btn-danger btn-sm update-button"
+                  @click="cancel()"
+                >
                   <Cross />
                 </button>
                 <button
@@ -186,25 +210,7 @@
         </div>
         <div class="modal-body">{{ modal.body }}</div>
         <div class="modal-footer">
-          <div v-if="funcToRun != null">
-            <button
-              class="btn btn-danger"
-              type="button"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              v-if="modal.showButton"
-              type="button"
-              class="btn btn-success"
-              data-bs-dismiss="modal"
-              @click="modal.funcToRun()"
-            >
-              {{ modal.button }}
-            </button>
-          </div>
-          <div v-else>
+          <div>
             <button
               v-if="modal.showButton"
               type="button"
@@ -223,7 +229,7 @@
     class="modal fade"
     id="deleteModal"
     tabindex="-1"
-    aria-labelledby="deleteModallLabel"
+    aria-labelledby="deleteModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog">
@@ -247,6 +253,50 @@
             class="btn btn-success"
             data-bs-dismiss="modal"
             @click="sendDelete()"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--TrainModal-->
+  <div
+    class="modal fade"
+    id="trainModal"
+    tabindex="-1"
+    aria-labelledby="trainModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="trainModalLabel">Start training</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Do you want to start training this dictionary now?
+        </div>
+        <div class="modal-footer">
+          <button
+            v-if="modal.showButton"
+            type="button"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+          >
+            No
+          </button>
+          <button
+            v-if="modal.showButton"
+            type="button"
+            class="btn btn-success"
+            data-bs-dismiss="modal"
+            @click="openTainer()"
           >
             Yes
           </button>
@@ -291,7 +341,6 @@ var modal = reactive({
   title: "",
   button: "Okay",
   showButton: true,
-  funcToRun: null,
 });
 var lastWordHash = "";
 
@@ -408,7 +457,7 @@ function sendUpdate() {
     });
 }
 
-function sendBindRequest() {
+function sendBindRequest(funcToRun) {
   modal.title = "Sending...";
   modal.body = "Pls wait";
   modal.showButton = false;
@@ -424,13 +473,11 @@ function sendBindRequest() {
   })
     .then((response) => {
       if (response.ok) {
-        sendRequest();
         modal.title = "Done!";
-        modal.body = "You have bond this dictionary! Now you can go the the Train-Tab (Journal-Icon)";
+        modal.body =
+          "You have bond this dictionary! Now you can go the the Train-Tab (Journal-Icon)";
         modal.showButton = true;
-        modal.funcToRun = openTainer;
-        console.log(modal.funcToRun);
-        /* Dont run func */
+        funcToRun();
       } else {
         return response.json();
       }
@@ -444,8 +491,9 @@ function sendBindRequest() {
     })
     .catch((ex) => {
       modal.title = "Error!";
-      modal.body = ex;
+      modal.body = ex.message;
       modal.showButton = true;
+      console.log(ex);
     });
 }
 
@@ -462,12 +510,18 @@ function startUpdate() {
   });
 }
 
-function removeFiled(word) {
-  word.dictionaryID = null;
+function openTainer() {
+  if (getCookie("access_token")) {
+    sendBindRequest(function () {
+      window.location = "/train?id=" + dictionary.content.id;
+    });
+  } else {
+    window.location = "/train?id=" + dictionary.content.id;
+  }
 }
 
-function openTainer() {
-  window.location = "/tain";
+function removeFiled(word) {
+  word.dictionaryID = null;
 }
 
 function isLastItem(item) {
@@ -615,6 +669,7 @@ input:focus {
   }
   .dictionary-wrapped {
     max-width: 97vw;
+    margin-bottom: 5rem;
   }
   .dictionary {
     margin-top: 2rem;

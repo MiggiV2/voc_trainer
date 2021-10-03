@@ -1,5 +1,6 @@
 package de.mymiggi.voc.trainer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -18,8 +19,21 @@ public class UniversalHibernateClient
 	public <T> List<T> getList(Class<T> objectClass)
 	{
 		checkObject(objectClass);
-		String query = "FROM " + objectClass.getSimpleName();
-		return session.createQuery(query, objectClass).list();
+		try
+		{
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
+			String query = "FROM " + objectClass.getSimpleName();
+			List<T> result = session.createQuery(query, objectClass).list();
+			return result;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Can get list for " + objectClass.getSimpleName(), e);
+			return new ArrayList<T>();
+		}
 	}
 
 	public <T> boolean save(T object)
@@ -27,7 +41,10 @@ public class UniversalHibernateClient
 		checkObject(object.getClass());
 		try
 		{
-			session.beginTransaction();
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
 			session.saveOrUpdate(object);
 			session.getTransaction().commit();
 			return true;
@@ -45,7 +62,10 @@ public class UniversalHibernateClient
 		checkObject(object.getClass());
 		try
 		{
-			session.beginTransaction();
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
 			session.update(object);
 			session.getTransaction().commit();
 			return true;
@@ -63,7 +83,10 @@ public class UniversalHibernateClient
 		checkObject(objectList.get(0).getClass());
 		try
 		{
-			session.beginTransaction();
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
 			for (T temp : objectList)
 			{
 				session.saveOrUpdate(temp);
@@ -85,7 +108,10 @@ public class UniversalHibernateClient
 		try
 		{
 			List<T> list = getList(objectClass);
-			session.beginTransaction();
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
 			for (T temp : list)
 			{
 				session.delete(temp);
@@ -106,7 +132,10 @@ public class UniversalHibernateClient
 		checkObject(object.getClass());
 		try
 		{
-			session.beginTransaction();
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
 			session.delete(object);
 			session.getTransaction().commit();
 			return true;
@@ -124,7 +153,10 @@ public class UniversalHibernateClient
 		checkObject(objectList.get(0).getClass());
 		try
 		{
-			session.beginTransaction();
+			if (!session.getTransaction().isActive())
+			{
+				session.beginTransaction();
+			}
 			for (T temp : objectList)
 			{
 				session.delete(temp);

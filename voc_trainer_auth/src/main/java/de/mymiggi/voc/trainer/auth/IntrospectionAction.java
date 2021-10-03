@@ -14,10 +14,14 @@ public class IntrospectionAction
 {
 	private static final Map<String, AuthResponse> CACHE = new HashMap<String, AuthResponse>();
 	private static final Logger LOGGER = Logger.getLogger(IntrospectionAction.class);
+	private static boolean runningClearThread;
 
 	public IntrospectionAction()
 	{
-		startClearThread();
+		if (!runningClearThread)
+		{
+			startClearThread();
+		}
 	}
 
 	public Response run(String body, String url)
@@ -29,15 +33,15 @@ public class IntrospectionAction
 	private Response sendCachedResponse(String token)
 	{
 		AuthResponse authResponse = CACHE.get(token);
-		LOGGER.info("Send cached Request for token:" + token);
-		return Response.status(authResponse.getCode()).entity(authResponse).build();
+		LOGGER.info("Send cached Request");
+		return Response.status(200).entity(authResponse).build();
 	}
 
 	private Response sendRequest(String url, String token)
 	{
 		AuthResponse authResponse = new SendIntrospectionAction().run(token, url);
 		CACHE.put(token, authResponse);
-		return Response.status(authResponse.getCode()).entity(authResponse).build();
+		return Response.status(200).entity(authResponse).build();
 	}
 
 	private void startClearThread()
@@ -47,16 +51,17 @@ public class IntrospectionAction
 			@Override
 			public void run()
 			{
-				boolean running = true;
-				while (running)
+				runningClearThread = true;
+				while (runningClearThread)
 				{
 					try
 					{
-						Thread.sleep(1 * 60 * 1000);
+						Thread.sleep(5 * 60 * 1000);
 					}
 					catch (InterruptedException e)
 					{
-						e.printStackTrace();
+						LOGGER.error("Stopped Thread!", e);
+						runningClearThread = false;
 					}
 					CACHE.clear();
 					LOGGER.info("Cleared cache!");

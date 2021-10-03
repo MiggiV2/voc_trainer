@@ -5,8 +5,21 @@
       <hr />
       <div class="row">
         <div class="col-auto">
-          <button title="Save this word" class="btn btn-primary top-buttons">
+          <button
+            title="Save this word"
+            class="btn btn-primary top-buttons"
+            @click="addSpecialWord()"
+            v-if="!dictionary.currentWord.specialWord"
+          >
             <Bookmark />
+          </button>
+          <button
+            title="Save this word"
+            class="btn btn-primary top-buttons"
+            @click="removeSpecialWord()"
+            v-else
+          >
+            <BookmarkCheckFill />
           </button>
           <button
             class="btn btn-outline-primary top-buttons show-button"
@@ -194,8 +207,10 @@
 <script setup>
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
+import { getCookie } from "../tools/cookie";
 
 import Bookmark from "./icons/Bookmark.vue";
+import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue";
 import Arrow_Right_Circle from "./icons/Arrow_Right_Circle.vue";
 import EmojiFrown from "./icons/EmojiFrown.vue";
 import EmojiWink from "./icons/EmojiWink.vue";
@@ -217,6 +232,7 @@ var dictionary = reactive({
     eng: "...",
     ger: "...",
     op: "...",
+    specialWord: false,
   },
 });
 
@@ -277,6 +293,55 @@ function loadDictionary() {
     });
 }
 
+function addSpecialWord() {
+  var data = {
+    wordID: dictionary.currentWord.id,
+  };
+  fetch(HOST + "api/add/special-word", {
+    method: "PUT",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify(data),
+    headers: {
+      Authorization: "Bearer " + getCookie("access_token"),
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      dictionary.currentWord.specialWord = true;
+      var index = dictionary.currentWord.index;
+      dictionary.content.words[index].specialWord = true;
+    } else {
+      alert(response.statusText);
+    }
+  });
+}
+
+function removeSpecialWord()
+{
+  var data = {
+    wordID: dictionary.currentWord.id
+  };
+  fetch(HOST + "api/remove/special-word", {
+    method: "PUT",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify(data),
+    headers: {
+      Authorization: "Bearer " + getCookie("access_token"),
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      dictionary.currentWord.specialWord = false;
+      var index = dictionary.currentWord.index;
+      dictionary.content.words[index].specialWord = false;
+    } else {
+      alert(response.statusText);
+    }
+  });
+}
+
 function check() {
   var correctWord = getAnwser();
   var isCorrect = correctWord === anwser.input;
@@ -321,6 +386,7 @@ function setRandomWord(counter) {
     anwser.lastWordIndex = randomIndex;
     anwser.input = "";
     dictionary.currentWord = dictionary.content.words[randomIndex];
+    dictionary.currentWord.index = randomIndex;
     setShownStatus();
   }
 }

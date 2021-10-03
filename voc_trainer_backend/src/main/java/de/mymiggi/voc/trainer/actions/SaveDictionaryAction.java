@@ -31,7 +31,15 @@ public class SaveDictionaryAction
 			.filter(word -> !word.getEng().isBlank() && !word.getGer().isBlank())
 			.forEach(word -> {
 				word.setDictionaryID(dictionaryEntry.getID());
-				filtered.add(word);
+				// Quarkus gets WordsResponse, I need Words.
+				// PS: WordsResponse extends Words, but can only save Words!
+				Words toAdd = new Words()
+					.setDictionaryID(word.getDictionaryID())
+					.setEng(word.getEng())
+					.setGer(word.getGer())
+					.setID(word.getID())
+					.setOp(word.getOp());
+				filtered.add(toAdd);
 			});
 		if (filtered.isEmpty())
 		{

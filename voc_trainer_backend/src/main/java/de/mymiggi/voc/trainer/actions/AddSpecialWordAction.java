@@ -19,7 +19,7 @@ public class AddSpecialWordAction
 			ShortMessageResponse message = new ShortMessageResponse("We can't find your word!");
 			return Response.status(Status.BAD_REQUEST).entity(message).build();
 		}
-		if (DictionaryResource.SPECIAL_WORD_MANAGER.userSavedWord(user, specialWord.getWordID()))
+		if (DictionaryResource.SPECIAL_WORD_MANAGER.getUserSavedWord(user, specialWord.getWordID()) != null)
 		{
 			ShortMessageResponse message = new ShortMessageResponse("You already added this word!");
 			return Response.status(Status.BAD_REQUEST).entity(message).build();

@@ -8,7 +8,7 @@ public class Dictionary
 	private String name;
 	private String id;
 	private DiscordUser user;
-	private Words[] words;
+	private WordsResponse[] words;
 
 	public String getName()
 	{
@@ -26,7 +26,7 @@ public class Dictionary
 		return words;
 	}
 
-	public Dictionary setWords(Words[] words)
+	public Dictionary setWords(WordsResponse[] words)
 	{
 		this.words = words;
 		return this;

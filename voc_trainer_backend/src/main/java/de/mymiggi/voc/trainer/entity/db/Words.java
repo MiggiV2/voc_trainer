@@ -16,6 +16,20 @@ public class Words
 	private String op;
 	private String dictionaryID;
 
+	public Words()
+	{
+
+	}
+
+	public Words(int iD, String ger, String eng, String op, String dictionaryID)
+	{
+		ID = iD;
+		this.ger = ger;
+		this.eng = eng;
+		this.op = op;
+		this.dictionaryID = dictionaryID;
+	}
+
 	public String getGer()
 	{
 		return ger;

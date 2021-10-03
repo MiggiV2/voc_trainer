@@ -1,9 +1,16 @@
 package de.mymiggi.voc.trainer.manager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 
 public class DictionaryEntryManager extends BasicManager<DictionaryEntry>
 {
+	private static final Map<String, DictionaryEntry> idMap = new HashMap<String, DictionaryEntry>();
 
 	public DictionaryEntryManager()
 	{
@@ -12,13 +19,25 @@ public class DictionaryEntryManager extends BasicManager<DictionaryEntry>
 
 	public DictionaryEntry getByID(String id)
 	{
-		for (DictionaryEntry temp : getEntrys())
+		return idMap.containsKey(id) ? idMap.get(id) : null;
+	}
+
+	public List<DictionaryEntry> getByUser(DiscordUser user)
+	{
+		List<DictionaryEntry> result = new ArrayList<DictionaryEntry>();
+		for (DictionaryEntry temp : entrys)
 		{
-			if (temp.getID().equals(id))
+			if (temp.getUserID().equals(user.getId()))
 			{
-				return temp;
+				result.add(temp);
 			}
 		}
-		return null;
+		return result;
+	}
+
+	@Override
+	protected void afterSyncList()
+	{
+		entrys.forEach(item -> idMap.put(item.getID(), item));
 	}
 }

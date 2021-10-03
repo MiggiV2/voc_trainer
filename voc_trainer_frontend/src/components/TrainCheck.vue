@@ -1,4 +1,5 @@
 <template>
+<!--Can't find your last dictionary-->
   <div class="wrapped">
     <div class="box" v-if="!getCookie('access_token') && !status.showTainer">
       <h1 class="text-danger">Please login first!</h1>
@@ -6,7 +7,7 @@
     <div class="box" v-if="!status.showTainer">
       <h2>Lets start!</h2>
       <hr />
-      <h4>Select a dictionary</h4>
+      <h4>{{status.message}}</h4>
       <p>
         Status:
         <a v-if="status.bond == null" class="spinner-border"></a>
@@ -18,7 +19,7 @@
           data-bs-target="#helpModal"
         >
           <Exclamation class="text-danger" />
-          No dictionary found -> Help!
+           Help!
         </a>
       </p>
       <div v-if="status.bond">
@@ -76,9 +77,10 @@ import Journal from "./icons/Journal.vue";
 var urlParams = new URLSearchParams(window.location.search);
 
 var status = reactive({
-  bond: true,
+  bond: null,
   dictionaryID: "help",
   showTainer: urlParams.has("id"),
+  message: "Searching your last dictionary..."
 });
 
 var button = reactive({
@@ -105,10 +107,12 @@ function sendRequest() {
     .then((response) => {
       if (response.status === 200) {
         status.bond = true;
+        status.message = 'Found your last dictionary.';
         startTimer(2);
         return response.json();
       } else if (response.status === 204) {
         status.bond = false;
+        status.message = 'No last dictionary found.';
       }
     })
     .then((response) => {

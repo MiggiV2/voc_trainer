@@ -24,13 +24,17 @@ import de.mymiggi.voc.trainer.actions.BindDictionary;
 import de.mymiggi.voc.trainer.actions.DeleteDictionaryAction;
 import de.mymiggi.voc.trainer.actions.GetBondedDictionary;
 import de.mymiggi.voc.trainer.actions.GetDictionaryByIDAction;
+import de.mymiggi.voc.trainer.actions.GetDictionaryByUserAction;
 import de.mymiggi.voc.trainer.actions.GetPreviewAction;
+import de.mymiggi.voc.trainer.actions.GetSpecialWordIDsAction;
+import de.mymiggi.voc.trainer.actions.RemoveSpecialWordAction;
 import de.mymiggi.voc.trainer.actions.SaveDictionaryAction;
 import de.mymiggi.voc.trainer.actions.SearchDictionaryAction;
 import de.mymiggi.voc.trainer.actions.UpdateDictionaryAction;
 import de.mymiggi.voc.trainer.actions.helper.BuildUserFromContext;
 import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
 import de.mymiggi.voc.trainer.entity.db.SpecialWord;
 import de.mymiggi.voc.trainer.entity.db.Words;
@@ -44,6 +48,7 @@ import de.mymiggi.voc.trainer.manager.WordsManager;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DictionaryResource
 {
+	/* LOL */
 	public static final UniversalHibernateClient HIBERNATE_CLIENT = new UniversalHibernateClient();
 	public static final WordsManager WORDS_MANAGER = new WordsManager();
 	public static final DictionaryEntryManager DICTIONARY_MANAGER = new DictionaryEntryManager();
@@ -68,10 +73,17 @@ public class DictionaryResource
 
 	@GET
 	@Path("get/dictionary")
-	@PermitAll
 	public Response getDictionary(@QueryParam("id") String id)
 	{
 		return new GetDictionaryByIDAction().run(id);
+	}
+
+	@GET
+	@Path("get/my-dictionarys")
+	@RolesAllowed({ "user", "admin" })
+	public Response getMyDictionary(@Context SecurityContext ctx)
+	{
+		return new GetDictionaryByUserAction().run(getUser(ctx));
 	}
 
 	@GET
@@ -79,7 +91,15 @@ public class DictionaryResource
 	@RolesAllowed({ "user", "admin" })
 	public Response getBondedDictionary(@Context SecurityContext ctx)
 	{
-		return new GetBondedDictionary().run(new BuildUserFromContext().run(ctx));
+		return new GetBondedDictionary().run(getUser(ctx));
+	}
+
+	@GET
+	@Path("get/special-word-ids")
+	@RolesAllowed({ "user", "admin" })
+	public Response getSpecialWordIs(@Context SecurityContext ctx)
+	{
+		return new GetSpecialWordIDsAction().run(getUser(ctx));
 	}
 
 	@PUT
@@ -87,7 +107,7 @@ public class DictionaryResource
 	@RolesAllowed({ "user", "admin" })
 	public Response updateDictionary(@Context SecurityContext ctx, @QueryParam("id") String id, List<Words> newWords)
 	{
-		return new UpdateDictionaryAction().run(id, new BuildUserFromContext().run(ctx), newWords);
+		return new UpdateDictionaryAction().run(id, getUser(ctx), newWords);
 	}
 
 	@PUT
@@ -95,7 +115,7 @@ public class DictionaryResource
 	@RolesAllowed({ "user", "admin" })
 	public Response save(@Context SecurityContext ctx, Dictionary dictionary)
 	{
-		return new SaveDictionaryAction().run(dictionary, new BuildUserFromContext().run(ctx));
+		return new SaveDictionaryAction().run(dictionary, getUser(ctx));
 	}
 
 	@PUT
@@ -103,7 +123,15 @@ public class DictionaryResource
 	@RolesAllowed({ "user", "admin" })
 	public Response addSpecialWord(@Context SecurityContext ctx, SpecialWord specialWord)
 	{
-		return new AddSpecialWordAction().run(new BuildUserFromContext().run(ctx), specialWord);
+		return new AddSpecialWordAction().run(getUser(ctx), specialWord);
+	}
+
+	@PUT
+	@Path("remove/special-word")
+	@RolesAllowed({ "user", "admin" })
+	public Response removeSpecialWord(@Context SecurityContext ctx, SpecialWord specialWord)
+	{
+		return new RemoveSpecialWordAction().run(getUser(ctx), specialWord);
 	}
 
 	@PUT
@@ -111,7 +139,7 @@ public class DictionaryResource
 	@RolesAllowed({ "user", "admin" })
 	public Response bind(@Context SecurityContext ctx, @QueryParam("id") String id)
 	{
-		return new BindDictionary().run(id, new BuildUserFromContext().run(ctx));
+		return new BindDictionary().run(id, getUser(ctx));
 	}
 
 	@PUT
@@ -121,6 +149,8 @@ public class DictionaryResource
 	{
 		WORDS_MANAGER.syncList();
 		DICTIONARY_MANAGER.syncList();
+		BONDED_DICTIONARY_MANAGER.syncList();
+		SPECIAL_WORD_MANAGER.syncList();
 		new CleanDataBaseAction().run();
 		return Response.ok().build();
 	}
@@ -148,5 +178,10 @@ public class DictionaryResource
 	public Response test(@Context SecurityContext ctx)
 	{
 		return Response.ok(new Gson().toJson(ctx.getUserPrincipal())).build();
+	}
+
+	private DiscordUser getUser(SecurityContext ctx)
+	{
+		return new BuildUserFromContext().run(ctx);
 	}
 }
