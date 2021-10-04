@@ -1,0 +1,42 @@
+version: '3'
+
+networks:
+
+  vocnet:
+
+services:
+
+  database:
+    image: 'postgres:latest'
+    container_name: voc-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+    networks:
+      - vocnet
+
+  auth:
+    image: 'voc-auth'
+    container_name: voc-auth      
+    networks:
+      - vocnet
+
+  backend:
+    image: 'voc-backend'
+    container_name: voc-backend    
+    networks:
+      - vocnet
+    ports:
+      - 8888:8888
+
+  frontend:
+    image: 'voc-frontend'
+    container_name: voc-frontend    
+    networks:
+      - vocnet
+    ports:
+      - 3000:80
+    

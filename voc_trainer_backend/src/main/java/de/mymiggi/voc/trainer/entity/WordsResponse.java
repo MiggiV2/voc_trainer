@@ -25,8 +25,9 @@ public class WordsResponse extends Words
 		return isSpecialWord;
 	}
 
-	public void setSpecialWord(boolean isSpecialWord)
+	public WordsResponse setSpecialWord(boolean isSpecialWord)
 	{
 		this.isSpecialWord = isSpecialWord;
+		return this;
 	}
 }

@@ -17,8 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import com.google.gson.Gson;
-
 import de.mymiggi.voc.trainer.actions.AddSpecialWordAction;
 import de.mymiggi.voc.trainer.actions.BindDictionary;
 import de.mymiggi.voc.trainer.actions.DeleteDictionaryAction;
@@ -26,6 +24,7 @@ import de.mymiggi.voc.trainer.actions.GetBondedDictionary;
 import de.mymiggi.voc.trainer.actions.GetDictionaryByIDAction;
 import de.mymiggi.voc.trainer.actions.GetDictionaryByUserAction;
 import de.mymiggi.voc.trainer.actions.GetPreviewAction;
+import de.mymiggi.voc.trainer.actions.GetSpecialWordAction;
 import de.mymiggi.voc.trainer.actions.GetSpecialWordIDsAction;
 import de.mymiggi.voc.trainer.actions.RemoveSpecialWordAction;
 import de.mymiggi.voc.trainer.actions.SaveDictionaryAction;
@@ -48,7 +47,6 @@ import de.mymiggi.voc.trainer.manager.WordsManager;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DictionaryResource
 {
-	/* LOL */
 	public static final UniversalHibernateClient HIBERNATE_CLIENT = new UniversalHibernateClient();
 	public static final WordsManager WORDS_MANAGER = new WordsManager();
 	public static final DictionaryEntryManager DICTIONARY_MANAGER = new DictionaryEntryManager();
@@ -73,6 +71,7 @@ public class DictionaryResource
 
 	@GET
 	@Path("get/dictionary")
+	@PermitAll
 	public Response getDictionary(@QueryParam("id") String id)
 	{
 		return new GetDictionaryByIDAction().run(id);
@@ -87,6 +86,14 @@ public class DictionaryResource
 	}
 
 	@GET
+	@Path("get/users-dictionarys")
+	@PermitAll
+	public Response getUsersDictionary(@Context SecurityContext ctx, @QueryParam("id") String userID)
+	{
+		return new GetDictionaryByUserAction().run(new DiscordUser(userID));
+	}
+
+	@GET
 	@Path("get/bonded-dictionary")
 	@RolesAllowed({ "user", "admin" })
 	public Response getBondedDictionary(@Context SecurityContext ctx)
@@ -97,9 +104,17 @@ public class DictionaryResource
 	@GET
 	@Path("get/special-word-ids")
 	@RolesAllowed({ "user", "admin" })
-	public Response getSpecialWordIs(@Context SecurityContext ctx)
+	public Response getSpecialWordIds(@Context SecurityContext ctx)
 	{
 		return new GetSpecialWordIDsAction().run(getUser(ctx));
+	}
+
+	@GET
+	@Path("get/special-word")
+	@RolesAllowed({ "user", "admin" })
+	public Response getSpecialWord(@Context SecurityContext ctx)
+	{
+		return new GetSpecialWordAction().run(getUser(ctx));
 	}
 
 	@PUT
@@ -161,23 +176,6 @@ public class DictionaryResource
 	public Response delete(Dictionary dictionary)
 	{
 		return new DeleteDictionaryAction().run(dictionary);
-	}
-
-	@GET
-	@Path("admin")
-	@RolesAllowed({ "admin" })
-	public Response admin(@Context SecurityContext ctx)
-	{
-		return Response.ok().build();
-	}
-
-	@GET
-	@Path("test")
-	@RolesAllowed({ "user", "admin" })
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response test(@Context SecurityContext ctx)
-	{
-		return Response.ok(new Gson().toJson(ctx.getUserPrincipal())).build();
 	}
 
 	private DiscordUser getUser(SecurityContext ctx)

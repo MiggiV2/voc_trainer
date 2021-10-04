@@ -8,6 +8,9 @@ import Add from './Add.vue';
 import Read from './Read.vue';
 import Search from './Search.vue';
 import Trainer from './Train.vue';
+import MyDictionarys from './MyDictionarys.vue';
+import UsersDictionarys from './UsersDictionarys.vue';
+import Saved from './Saved.vue';
 
 const NotFoundComponent = {
     template: '<p>Page not found</p>'
@@ -19,7 +22,10 @@ const routes = {
     '/add': Add,
     '/read': Read,
     '/train': Trainer,
-    '/search': Search
+    '/search': Search,
+    '/my-dictionarys': MyDictionarys,
+    '/users': UsersDictionarys,
+    '/saved': Saved,
 }
 
 const SimpleRouter = {

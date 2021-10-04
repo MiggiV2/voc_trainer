@@ -45,12 +45,12 @@
               /></a>
             </li>
             <li>
-              <a class="dropdown-item" href="/" title="Show your dictionarys">
+              <a class="dropdown-item" href="/my-dictionarys" title="Show your dictionarys">
                 Yours <Book />
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="/" title="Show your marked words">
+              <a class="dropdown-item" href="/saved" title="Show your marked words">
                 Saved <BookmarkCheckFill />
               </a>
             </li>

@@ -6,6 +6,28 @@ public class DiscordUser
 	private String avater;
 	private String id;
 
+	public DiscordUser()
+	{
+	}
+
+	public DiscordUser(String id)
+	{
+		this.id = id;
+	}
+
+	public DiscordUser(String id, String name)
+	{
+		this.name = name;
+		this.id = id;
+	}
+
+	public DiscordUser(String name, String avater, String id)
+	{
+		this.name = name;
+		this.avater = avater;
+		this.id = id;
+	}
+
 	public String getName()
 	{
 		return name;

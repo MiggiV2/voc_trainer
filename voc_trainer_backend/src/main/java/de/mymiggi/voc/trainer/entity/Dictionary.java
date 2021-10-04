@@ -1,5 +1,7 @@
 package de.mymiggi.voc.trainer.entity;
 
+import java.util.List;
+
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 import de.mymiggi.voc.trainer.entity.db.Words;
 
@@ -24,6 +26,26 @@ public class Dictionary
 	public Words[] getWords()
 	{
 		return words;
+	}
+
+	public Dictionary setWords(List<Words> words, boolean AreSpecialWords)
+	{
+		this.words = new WordsResponse[words.size()];
+		for (int i = 0; i < words.size(); i++)
+		{
+			this.words[i] = new WordsResponse(words.get(i)).setSpecialWord(AreSpecialWords);
+		}
+		return this;
+	}
+
+	public Dictionary setWords(List<Words> words)
+	{
+		this.words = new WordsResponse[words.size()];
+		for (int i = 0; i < words.size(); i++)
+		{
+			this.words[i] = new WordsResponse(words.get(i));
+		}
+		return this;
 	}
 
 	public Dictionary setWords(WordsResponse[] words)

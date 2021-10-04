@@ -4,19 +4,28 @@
     <div v-if="show.content === null" class="dictionary">
       <div class="row header" v-if="dictionary.content.user != null">
         <div class="col-auto">
-          <img
-            class="avatar"
-            v-if="dictionary.content.user.avatarURL != null"
-            :src="dictionary.content.user.avatarURL"
-            :title="dictionary.content.user.name"
-          />
+          <a :href="'/users?id=' + dictionary.content.user.id">
+            <img
+              class="avatar"
+              v-if="dictionary.content.user.avatarURL != null"
+              :src="dictionary.content.user.avatarURL"
+              :title="dictionary.content.user.name"
+            />
+          </a>
         </div>
         <div class="col">
           <h3 class="title">
             {{ dictionary.content.name }}
-            <a class="desktop"> by {{ dictionary.content.user.name }}</a>
+            <a
+              class="desktop"
+              :href="'/users?id=' + dictionary.content.user.id"
+            >
+              by {{ dictionary.content.user.name }}
+            </a>
           </h3>
-          <p class="mobile">by {{ dictionary.content.user.name }}</p>
+          <a class="mobile" :href="'/users?id=' + dictionary.content.user.id">
+            by {{ dictionary.content.user.name }}
+          </a>
         </div>
         <div class="col-auto">
           <div class="btn-group" role="group">
@@ -30,28 +39,6 @@
             >
               <Journal />
             </div>
-            <!--
-              <div
-              class="group-item"
-              role="button"
-              @click="sendBindRequest()"
-              v-if="!show.edit && getCookie('access_token')"
-              title="Set this as your training dictionary"
-              data-bs-toggle="modal"
-              data-bs-target="#updatedModal"
-            >
-              <Journal />
-            </div>
-              <div
-              class="group-item"
-              role="button"
-              @click="openTainer()"
-              v-else
-              title="Start training this dictionary"
-            >
-              <Journal />
-              </div>
-            -->
             <div class="group-item" v-if="isYours()">
               <div v-if="!show.edit">
                 <div
@@ -645,6 +632,8 @@ input:focus {
 }
 .mobile {
   display: none;
+  color: unset;
+  text-decoration: unset;
 }
 .desktop {
   color: unset;
