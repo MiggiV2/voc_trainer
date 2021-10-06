@@ -52,28 +52,36 @@
             v-for="(item, index) in saved.current.words"
             :key="index"
           >
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Englisch word"
-                v-model="item.eng"
-              />
-              <input
-                type="text"
-                class="form-control"
-                placeholder="German word"
-                v-model="item.ger"
-              />
-            </div>
-            <div class="input-group">
-              <input
-                type="text"
-                v-if="showItem(item)"
-                class="form-control"
-                placeholder="(OPTIONAL) description, opposite, etc..."
-                v-model="item.op"
-              />
+            <div v-if="item.specialWord">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Englisch word"
+                  v-model="item.eng"
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="German word"
+                  v-model="item.ger"
+                />
+                <div
+                  class="btn btn-outline-danger"
+                  @click="removeSpecialWord(item)"
+                >
+                  <Trash />
+                </div>
+              </div>
+              <div class="input-group">
+                <input
+                  type="text"
+                  v-if="showItem(item)"
+                  class="form-control"
+                  placeholder="(OPTIONAL) description, opposite, etc..."
+                  v-model="item.op"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -91,6 +99,8 @@
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
+
+import Trash from "./icons/Trash.vue";
 
 var saved = reactive({
   content: [],
@@ -129,6 +139,28 @@ function load() {
     });
 }
 
+function removeSpecialWord(word) {
+  word.specialWord = false;
+  var data = {
+    wordID: word.id,
+  };
+  fetch(HOST + "api/remove/special-word", {
+    method: "PUT",
+    credentails: "same-origin",
+    mode: "cors",
+    body: JSON.stringify(data),
+    headers: {
+      Authorization: "Bearer " + getCookie("access_token"),
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (!response.ok) {
+      alert(response.statusText);
+      load();
+    }
+  });
+}
+
 function showItem(item) {
   return (
     item !== null &&
@@ -141,7 +173,6 @@ function showItem(item) {
 function setItem(item) {
   saved.current.dictionaryName = item.name;
   saved.current.words = item.words;
-  console.log(item.words.length);
 }
 </script>
 
@@ -181,7 +212,7 @@ a:visited {
   border-radius: 5px;
 }
 .spinner-border {
-  margin-left: 45vw;
+  margin-left: 49vw;
   margin-top: 2rem;
 }
 .words {

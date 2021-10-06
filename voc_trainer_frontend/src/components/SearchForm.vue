@@ -28,7 +28,7 @@ if(urlParams.has('query'))
 
 function search()
 {
-  request.query = request.query.replace(/ /g,'');
+  //request.query = request.query.replace(/ /g,'');
   if(request.query === '')
   {
     window.location = '/';

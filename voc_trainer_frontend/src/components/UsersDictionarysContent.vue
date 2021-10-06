@@ -129,7 +129,7 @@ a:visited {
   border-radius: 5px;
 }
 .spinner-border {
-  margin-left: 45vw;
+  margin-left: 49vw;
   margin-top: 2rem;
 }
 @media (max-width: 768px) {

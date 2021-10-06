@@ -53,6 +53,11 @@ public class DictionaryResource
 	public static final BondedDictionaryManager BONDED_DICTIONARY_MANAGER = new BondedDictionaryManager();
 	public static final SpecialWordManager SPECIAL_WORD_MANAGER = new SpecialWordManager();
 
+	public DictionaryResource()
+	{
+		new CleanDataBaseAction().run();
+	}
+
 	@POST
 	@Path("search")
 	@PermitAll

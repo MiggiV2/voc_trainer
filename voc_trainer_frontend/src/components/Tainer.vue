@@ -85,6 +85,7 @@
             class="form-control"
             placeholder="Englisch word"
             v-model="anwser.input"
+            autofocus
           />
           <button type="submit" class="btn btn-success">Answer</button>
         </div>
@@ -162,11 +163,11 @@
               class="form-check-input"
               type="radio"
               name="flexRadioDefault"
-              id="flexRadioDefault1"
+              id="flexRadioDefault2"
               @click="updateAskSettings(0)"
             />
-            <label class="form-check-label" for="flexRadioDefault1">
-              Only englisch words
+            <label class="form-check-label" for="flexRadioDefault2">
+              Only german words
             </label>
           </div>
           <div class="form-check">
@@ -174,11 +175,11 @@
               class="form-check-input"
               type="radio"
               name="flexRadioDefault"
-              id="flexRadioDefault2"
+              id="flexRadioDefault1"
               @click="updateAskSettings(1)"
             />
-            <label class="form-check-label" for="flexRadioDefault2">
-              Only german words
+            <label class="form-check-label" for="flexRadioDefault1">
+              Only englisch words
             </label>
           </div>
           <div class="form-check">
@@ -317,10 +318,9 @@ function addSpecialWord() {
   });
 }
 
-function removeSpecialWord()
-{
+function removeSpecialWord() {
   var data = {
-    wordID: dictionary.currentWord.id
+    wordID: dictionary.currentWord.id,
   };
   fetch(HOST + "api/remove/special-word", {
     method: "PUT",

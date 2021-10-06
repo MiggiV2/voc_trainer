@@ -28,7 +28,7 @@ public class Dictionary
 		return words;
 	}
 
-	public Dictionary setWords(List<Words> words, boolean AreSpecialWords)
+	public Dictionary setWordList(List<Words> words, boolean AreSpecialWords)
 	{
 		this.words = new WordsResponse[words.size()];
 		for (int i = 0; i < words.size(); i++)
@@ -38,7 +38,7 @@ public class Dictionary
 		return this;
 	}
 
-	public Dictionary setWords(List<Words> words)
+	public Dictionary setWordList(List<Words> words)
 	{
 		this.words = new WordsResponse[words.size()];
 		for (int i = 0; i < words.size(); i++)

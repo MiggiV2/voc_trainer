@@ -11,11 +11,12 @@ import Trainer from './Train.vue';
 import MyDictionarys from './MyDictionarys.vue';
 import UsersDictionarys from './UsersDictionarys.vue';
 import Saved from './Saved.vue';
-
+import NoPage from './NoPage.vue';
+/*
 const NotFoundComponent = {
     template: '<p>Page not found</p>'
 }
-
+*/
 const routes = {
     '/': HomeComponent,
     '/callback': CallBack,
@@ -35,7 +36,7 @@ const SimpleRouter = {
 
     computed: {
         CurrentComponent() {
-            return routes[this.currentRoute] || NotFoundComponent
+            return routes[this.currentRoute] || NoPage
         }
     },
 

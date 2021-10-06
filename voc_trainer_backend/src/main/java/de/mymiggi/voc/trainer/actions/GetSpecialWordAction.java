@@ -23,7 +23,7 @@ public class GetSpecialWordAction
 		Map<DictionaryEntry, List<Words>> dictionaryMap = new HashMap<DictionaryEntry, List<Words>>();
 		ids.forEach(item -> addItem(dictionaryMap, item));
 		dictionaryMap.forEach((dictionaryEntry, wordList) -> {
-			dictionarys.add(new Dictionary().setDictionaryEntry(dictionaryEntry).setWords(wordList, true));
+			dictionarys.add(new Dictionary().setDictionaryEntry(dictionaryEntry).setWordList(wordList, true));
 		});
 		return Response.ok(dictionarys).build();
 	}
@@ -31,11 +31,16 @@ public class GetSpecialWordAction
 	private void addItem(Map<DictionaryEntry, List<Words>> result, SpecialWord item)
 	{
 		Words words = DictionaryResource.WORDS_MANAGER.getWordsByID(item.getWordID());
-		DictionaryEntry dictionary = DictionaryResource.DICTIONARY_MANAGER.getByID(words.getDictionaryID());
-		if (!result.containsKey(dictionary))
+		DictionaryEntry dictionary = (words != null)
+			? dictionary = DictionaryResource.DICTIONARY_MANAGER.getByID(words.getDictionaryID())
+			: null;
+		if (dictionary != null)
 		{
-			result.put(dictionary, new ArrayList<Words>());
+			if (!result.containsKey(dictionary))
+			{
+				result.put(dictionary, new ArrayList<Words>());
+			}
+			result.get(dictionary).add(words);
 		}
-		result.get(dictionary).add(words);
 	}
 }

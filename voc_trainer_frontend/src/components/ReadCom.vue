@@ -237,6 +237,14 @@
           <button
             v-if="modal.showButton"
             type="button"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+          >
+            No
+          </button>
+          <button
+            v-if="modal.showButton"
+            type="button"
             class="btn btn-success"
             data-bs-dismiss="modal"
             @click="sendDelete()"
