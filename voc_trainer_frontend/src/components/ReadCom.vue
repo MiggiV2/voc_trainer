@@ -32,7 +32,7 @@
             <div
               class="group-item"
               role="button"
-              v-if="!show.edit && getCookie('access_token')"
+              v-if="!show.edit"
               title="Train this dictionary"
               data-bs-toggle="modal"
               data-bs-target="#trainModal"
@@ -287,7 +287,7 @@
             No
           </button>
           <button
-            v-if="modal.showButton"
+            v-if="modal.showButton && getCookie('access_token')"
             type="button"
             class="btn btn-success"
             data-bs-dismiss="modal"
@@ -295,6 +295,14 @@
           >
             Yes
           </button>
+          <a
+            v-else-if="modal.showButton"
+            :href="'/train?id=' + dictionary.content.id"
+            type="button"
+            class="btn btn-success"
+          >
+            Yes
+          </a>
         </div>
       </div>
     </div>

@@ -23,6 +23,12 @@ public class SaveDictionaryAction
 			ShortMessageResponse message = new ShortMessageResponse("You need to set \"name\":STRING & \"words\":ARRAY");
 			return Response.status(Status.BAD_REQUEST).entity(message).build();
 		}
+		List<DictionaryEntry> usersDictionarys = DictionaryResource.DICTIONARY_MANAGER.getByUser(discordUser);
+		if (usersDictionarys.size() > 50)
+		{
+			ShortMessageResponse message = new ShortMessageResponse("Your limit is reached! Max dictionarys is 50!");
+			return Response.status(Status.BAD_REQUEST).entity(message).build();
+		}
 		List<Words> words = Arrays.asList(dictionary.getWords());
 		List<Words> filtered = new ArrayList<Words>();
 		DictionaryEntry dictionaryEntry = new DictionaryEntry(dictionary.getName());

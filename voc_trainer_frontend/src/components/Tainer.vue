@@ -9,7 +9,9 @@
             title="Save this word"
             class="btn btn-primary top-buttons"
             @click="addSpecialWord()"
-            v-if="!dictionary.currentWord.specialWord"
+            v-if="
+              !dictionary.currentWord.specialWord && getCookie('access_token')
+            "
           >
             <Bookmark />
           </button>
@@ -17,7 +19,7 @@
             title="Save this word"
             class="btn btn-primary top-buttons"
             @click="removeSpecialWord()"
-            v-else
+            v-else-if="getCookie('access_token')"
           >
             <BookmarkCheckFill />
           </button>
@@ -254,9 +256,7 @@ if (localStorage.getItem("settings.ask")) {
   settings.ask = localStorage.getItem("settings.ask");
 } else {
   localStorage.setItem("settings.ask", 2);
-  console.log("Set item!");
 }
-
 if (urlParams.has("id")) {
   loadDictionary();
 }
@@ -274,7 +274,6 @@ function setCheck() {
   } else {
     document.getElementById("flexRadioDefault3").setAttribute("checked", true);
   }
-  console.log(settings.ask);
 }
 
 function loadDictionary() {

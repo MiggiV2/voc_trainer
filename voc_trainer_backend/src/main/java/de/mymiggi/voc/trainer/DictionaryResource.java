@@ -77,9 +77,9 @@ public class DictionaryResource
 	@GET
 	@Path("get/dictionary")
 	@PermitAll
-	public Response getDictionary(@QueryParam("id") String id)
+	public Response getDictionary(@QueryParam("id") String id, @Context SecurityContext ctx)
 	{
-		return new GetDictionaryByIDAction().run(id);
+		return new GetDictionaryByIDAction().run(id, getUser(ctx));
 	}
 
 	@GET

@@ -1,13 +1,25 @@
 <template>
   <div class="saved-wrapped">
     <div v-if="getCookie('access_token')">
-      <div class="title">
-        <h2>Your saved words!</h2>
+      <div v-if="saved.hasContent">
+        <h2 class="title">{{ title.content }}</h2>
       </div>
-      <div v-if="saved.content.length == 0" class="spinner-border"></div>
-      <div class="saved" v-for="(item, index) in saved.content" :key="index">
+      <div class="box-wrapped" v-else>
+        <div class="box">
+          <h2>{{ title.content }}</h2>
+          <div>
+            <hr />
+            <p>You have to add some words first!</p>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="saved.content.length == 0 && saved.hasContent"
+        class="spinner-border"
+      ></div>
+      <div class="box-wrapped-xl" v-for="(item, index) in saved.content" :key="index">
         <div
-          class="saved-item"
+          class="box"
           data-bs-toggle="modal"
           data-bs-target="#wordsModal"
           @click="setItem(item)"
@@ -15,6 +27,13 @@
           <h2>{{ item.name }}</h2>
           <hr />
           <p>Click me to see your words.</p>
+        </div>
+      </div>
+      <div class="box-wrapped" v-if="!saved.hasContent">
+        <div class="box">
+        <h3>How to save words?</h3>
+        <hr />
+        <p>Go to <a href="/train">train</a> and click <Bookmark /></p>
         </div>
       </div>
     </div>
@@ -100,7 +119,12 @@ import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
 
+import Bookmark from "./icons/Bookmark.vue";
 import Trash from "./icons/Trash.vue";
+
+var title = reactive({
+  content: "Your saved words...",
+});
 
 var saved = reactive({
   content: [],
@@ -108,6 +132,7 @@ var saved = reactive({
     dictionaryName: String,
     words: [],
   },
+  hasContent: true,
 });
 
 if (getCookie("access_token")) {
@@ -128,14 +153,20 @@ function load() {
     },
   })
     .then((response) => {
-      if (response.ok) {
+      if (response.status === 200) {
         return response.json();
+      } else if (response.status === 204) {
+        saved.hasContent = false;
+        title.content = "No words saved!";
       } else {
         console.log(response.statusText);
       }
     })
     .then((savedResponse) => {
-      saved.content = savedResponse;
+      if (savedResponse != null) {
+        saved.content = savedResponse;
+        title.content = "Your saved words!";
+      }
     });
 }
 
@@ -191,21 +222,19 @@ a:visited {
 .saved-wrapped {
   margin-bottom: 4rem;
 }
-.saved {
-  max-width: 50rem;
-  margin: auto;
+.text {
+  text-align: center;
+  font-size: 1.2rem;
 }
 .title {
   margin: 2rem auto 3.5rem;
   text-align: center;
 }
-.saved-item {
-  border: solid 1px black;
-  border-radius: 5px 10px 5px 10px;
-  padding: 15px;
-  max-width: 98%;
-  margin: 2rem auto 2rem;
-  cursor: pointer;
+.title h2 {
+  margin: 1rem;
+}
+.box h2 {
+  text-align: unset;
 }
 .avatar {
   max-height: 40px;
@@ -214,6 +243,12 @@ a:visited {
 .spinner-border {
   margin-left: 49vw;
   margin-top: 2rem;
+}
+.box a:link {
+  color: #0a58ca;
+}
+.box-wrapped {
+  text-align: center;
 }
 .words {
   margin-bottom: 1.4rem;

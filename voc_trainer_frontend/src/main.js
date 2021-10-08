@@ -12,11 +12,7 @@ import MyDictionarys from './MyDictionarys.vue';
 import UsersDictionarys from './UsersDictionarys.vue';
 import Saved from './Saved.vue';
 import NoPage from './NoPage.vue';
-/*
-const NotFoundComponent = {
-    template: '<p>Page not found</p>'
-}
-*/
+
 const routes = {
     '/': HomeComponent,
     '/callback': CallBack,

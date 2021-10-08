@@ -1,8 +1,8 @@
 <template>
   <div class="preview-wrapped">
     <div v-if="preview.content.length == 0" class="spinner-border"></div>
-    <div class="preview" v-for="(item, index) in preview.content" :key="index">
-      <div class="preview-item">
+    <div class="box-wrapped-xl" v-for="(item, index) in preview.content" :key="index">
+      <div class="box">
         <a :href="'/read?id=' + item.id">
           <div class="row">
             <div class="col-auto">
@@ -93,5 +93,8 @@ a:visited {
 .spinner-border {
   margin-left: 45vw;
   margin-top: 2rem;
+}
+.box{
+  text-align: unset;
 }
 </style>

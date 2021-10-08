@@ -11,6 +11,10 @@ public class BuildUserFromContext
 {
 	public DiscordUser run(SecurityContext ctx)
 	{
+		if (ctx.getUserPrincipal() == null)
+		{
+			return new DiscordUser();
+		}
 		String userStr = ctx.getUserPrincipal().getName();
 		String[] parts = userStr.split(";");
 		Map<String, String> userMap = new HashMap<String, String>();

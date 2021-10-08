@@ -1,12 +1,19 @@
 <template>
-  <div class="yours-wrapped">
+  <div>
     <div v-if="getCookie('access_token')">
       <div class="title">
-        <h2>Your dictionarys!</h2>
+        <h2>{{ title.content }}</h2>
       </div>
-      <div v-if="yours.content.length == 0" class="spinner-border"></div>
-      <div class="yours" v-for="(item, index) in yours.content" :key="index">
-        <div class="yours-item">
+      <div
+        v-if="yours.content.length == 0 && yours.hasContent"
+        class="spinner-border"
+      ></div>
+      <div
+        class="box-wrapped-xl"
+        v-for="(item, index) in yours.content"
+        :key="index"
+      >
+        <div class="box">
           <a :href="'/read?id=' + item.id">
             <div class="row">
               <div class="col-auto">
@@ -27,6 +34,14 @@
           </a>
         </div>
       </div>
+      <div class="box-wrapped-md" v-if="!yours.hasContent">
+        <div class="box">
+          <h3>How to create my dictionary?</h3>
+          <hr />
+          <p>Click <a href="/add">HERE</a> or in the header <Add /></p>
+          <p>Then enter your words.</p>
+        </div>
+      </div>
     </div>
     <div v-else>
       <div class="title">
@@ -41,8 +56,15 @@ import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
 
+import Add from "./icons/Add.vue";
+
+var title = reactive({
+  content: "Your dictionarys...",
+});
+
 var yours = reactive({
   content: [],
+  hasContent: true,
 });
 
 if (getCookie("access_token")) {
@@ -69,14 +91,20 @@ function load() {
     },
   })
     .then((response) => {
-      if (response.ok) {
+      if (response.status === 200) {
         return response.json();
+      } else if (response.status === 204) {
+        yours.hasContent = false;
+        title.content = "No dictionarys!";
       } else {
         console.log(response.statusText);
       }
     })
-    .then((yoursResponse) => {
-      yours.content = yoursResponse;
+    .then((response) => {
+      if (response != null) {
+        yours.content = response;
+        title.content = "Your dictionarys!";
+      }
     });
 }
 </script>
@@ -93,24 +121,15 @@ a:visited {
   color: unset;
   text-decoration: none;
 }
-.yours-wrapped {
-  margin-bottom: 4rem;
+.box-wrapped-md {
+  text-align: center;
 }
-.yours {
-  max-width: 50rem;
-  margin: auto;
+.box-wrapped-md a:link {
+  color: #0a58ca;
 }
 .title {
   margin: 2rem auto 3.5rem;
   text-align: center;
-}
-.yours-item {
-  border: solid 1px black;
-  border-radius: 5px 10px 5px 10px;
-  padding: 15px;
-  max-width: 98%;
-  margin: 2rem auto 2rem;
-  cursor: pointer;
 }
 .avatar {
   max-height: 40px;

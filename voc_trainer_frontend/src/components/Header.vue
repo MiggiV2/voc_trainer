@@ -154,9 +154,6 @@ a:visited {
   color: unset;
   text-decoration: none;
 }
-div {
-  font-family: "Courier New", Courier, monospace;
-}
 .avatar {
   max-height: 40px;
   border-radius: 5px;

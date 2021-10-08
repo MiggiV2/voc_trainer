@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response.Status;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
 import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.ShortMessageResponse;
 import de.mymiggi.voc.trainer.entity.WordsResponse;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
@@ -15,28 +16,22 @@ import de.mymiggi.voc.trainer.entity.db.Words;
 
 public class GetDictionaryByIDAction
 {
-	public Response run(String id)
+	public Response run(String id, DiscordUser user)
 	{
 		List<DictionaryEntry> dictionaryEntries = DictionaryResource.DICTIONARY_MANAGER.getEntrys();
 		List<Words> wordsEntries = DictionaryResource.WORDS_MANAGER.getEntrys();
-
 		DictionaryEntry dictionary = getDictionaryByID(id, dictionaryEntries);
-
 		if (dictionary == null)
 		{
 			ShortMessageResponse messageResponse = new ShortMessageResponse("Can't finde dictionary");
 			return Response.status(Status.BAD_REQUEST).entity(messageResponse).build();
 		}
-
 		List<Words> words = getWordsByDictionar(dictionary, wordsEntries);
 		List<WordsResponse> wordsResponses = new ArrayList<WordsResponse>();
-
-		words.forEach(item -> createWordResponse(dictionary.getUserID(), wordsResponses, item));
-
+		words.forEach(item -> createWordResponse(user.getId(), wordsResponses, item));
 		Dictionary response = new Dictionary()
 			.setDictionaryEntry(dictionary)
 			.setWords(wordsResponses.stream().toArray(WordsResponse[]::new));
-
 		return Response.ok(response).build();
 	}
 

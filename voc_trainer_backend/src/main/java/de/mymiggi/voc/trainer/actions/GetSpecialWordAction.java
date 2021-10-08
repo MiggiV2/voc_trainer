@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
 import de.mymiggi.voc.trainer.entity.Dictionary;
@@ -25,7 +26,7 @@ public class GetSpecialWordAction
 		dictionaryMap.forEach((dictionaryEntry, wordList) -> {
 			dictionarys.add(new Dictionary().setDictionaryEntry(dictionaryEntry).setWordList(wordList, true));
 		});
-		return Response.ok(dictionarys).build();
+		return dictionarys.isEmpty() ? Response.status(Status.NO_CONTENT).build() : Response.ok(dictionarys).build();
 	}
 
 	private void addItem(Map<DictionaryEntry, List<Words>> result, SpecialWord item)
