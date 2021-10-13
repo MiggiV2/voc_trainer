@@ -27,7 +27,7 @@ public class AuthResource
 	@POST
 	@Path("introspection")
 	@PermitAll
-	public Response search(String body)
+	public Response introspect(String body)
 	{
 		return new IntrospectionAction().run(body, introspectionURL);
 	}

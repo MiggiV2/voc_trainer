@@ -3,7 +3,7 @@ package de.mymiggi.voc.trainer.entity;
 public class DiscordUser
 {
 	private String name;
-	private String avater;
+	private String avatar;
 	private String id;
 
 	public DiscordUser()
@@ -24,7 +24,7 @@ public class DiscordUser
 	public DiscordUser(String name, String avater, String id)
 	{
 		this.name = name;
-		this.avater = avater;
+		this.avatar = avater;
 		this.id = id;
 	}
 
@@ -39,14 +39,14 @@ public class DiscordUser
 		return this;
 	}
 
-	public String getAvater()
+	public String getAvatar()
 	{
-		return avater;
+		return avatar;
 	}
 
-	public DiscordUser setAvater(String avater)
+	public DiscordUser setAvatar(String avater)
 	{
-		this.avater = avater;
+		this.avatar = avater;
 		return this;
 	}
 

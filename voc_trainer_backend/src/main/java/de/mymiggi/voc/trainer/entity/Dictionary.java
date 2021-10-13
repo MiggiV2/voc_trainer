@@ -59,7 +59,7 @@ public class Dictionary
 		this.name = dictionaryEntry.getName();
 		this.setId(dictionaryEntry.getID());
 		this.setUser(new DiscordUser()
-			.setAvater(dictionaryEntry.getUserAvater())
+			.setAvatar(dictionaryEntry.getUserAvater())
 			.setId(dictionaryEntry.getUserID())
 			.setName(dictionaryEntry.getUserName()));
 		return this;

@@ -67,6 +67,14 @@ public class DictionaryResource
 	}
 
 	@GET
+	@Path("get/account-info")
+	@RolesAllowed({ "user", "admin" })
+	public Response getUserInfo(@Context SecurityContext ctx)
+	{
+		return Response.ok(getUser(ctx)).build();
+	}
+
+	@GET
 	@Path("get/preview")
 	@PermitAll
 	public Response getpreview()

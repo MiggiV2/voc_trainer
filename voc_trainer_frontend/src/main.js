@@ -13,6 +13,8 @@ import UsersDictionarys from './UsersDictionarys.vue';
 import Saved from './Saved.vue';
 import NoPage from './NoPage.vue';
 
+require('@/assets/css/style.css');
+
 const routes = {
     '/': HomeComponent,
     '/callback': CallBack,

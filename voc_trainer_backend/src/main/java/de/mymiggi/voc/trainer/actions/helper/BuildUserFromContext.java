@@ -24,7 +24,7 @@ public class BuildUserFromContext
 			userMap.put(keyValue[0], keyValue[1]);
 		}
 		return new DiscordUser()
-			.setAvater(userMap.get("avater"))
+			.setAvatar(userMap.get("avater"))
 			.setName(userMap.get("user"))
 			.setId(userMap.get("id"));
 	}

@@ -1,7 +1,8 @@
-import {  setCookie } from "../tools/cookie";
+import { setCookie } from "../tools/cookie";
+import { HOST } from "./auth";
 
 export function loadUser(accessToken, funcToRun) {
-    fetch('https://discord.com/api/oauth2/@me', {
+    fetch(HOST + 'api/get/account-info', {
         headers: {
             'Authorization': 'Bearer ' + accessToken,
         },
@@ -16,9 +17,9 @@ export function loadUser(accessToken, funcToRun) {
         })
         .then(response => {
             if (response != null) {
-                localStorage.setItem('avatar', response.user.avatar);
-                localStorage.setItem('id', response.user.id);
-                localStorage.setItem('username', response.user.username);
+                localStorage.setItem('avatar', response.avatar);
+                localStorage.setItem('id', response.id);
+                localStorage.setItem('username', response.name);
                 funcToRun();
             }
         });

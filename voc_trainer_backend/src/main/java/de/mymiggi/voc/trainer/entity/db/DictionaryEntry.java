@@ -91,7 +91,7 @@ public class DictionaryEntry
 
 	public void setUser(DiscordUser user)
 	{
-		this.userAvater = user.getAvater();
+		this.userAvater = user.getAvatar();
 		this.userID = user.getId();
 		this.userName = user.getName();
 	}
