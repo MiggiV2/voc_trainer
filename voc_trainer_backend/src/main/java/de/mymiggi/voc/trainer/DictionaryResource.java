@@ -186,9 +186,9 @@ public class DictionaryResource
 	@DELETE
 	@Path("delete")
 	@RolesAllowed({ "user", "admin" })
-	public Response delete(Dictionary dictionary)
+	public Response delete(Dictionary dictionary, @Context SecurityContext ctx)
 	{
-		return new DeleteDictionaryAction().run(dictionary);
+		return new DeleteDictionaryAction().run(dictionary, getUser(ctx));
 	}
 
 	private DiscordUser getUser(SecurityContext ctx)

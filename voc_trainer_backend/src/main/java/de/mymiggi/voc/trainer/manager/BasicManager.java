@@ -3,12 +3,13 @@ package de.mymiggi.voc.trainer.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.mymiggi.voc.trainer.DictionaryResource;
+import de.mymiggi.voc.trainer.UniversalHibernateClient;
 
 public class BasicManager<T>
 {
 	private Class<T> objectClass;
 	protected List<T> entrys = new ArrayList<T>();
+	protected UniversalHibernateClient hibernateClient = new UniversalHibernateClient();
 
 	public BasicManager(Class<T> objectClass)
 	{
@@ -26,9 +27,30 @@ public class BasicManager<T>
 		this.entrys = entrys;
 	}
 
+	public boolean save(T listToSave)
+	{
+		boolean status = hibernateClient.save(listToSave);
+		syncList();
+		return status;
+	}
+
+	public boolean saveList(List<T> listToSave)
+	{
+		boolean status = hibernateClient.saveList(listToSave);
+		syncList();
+		return status;
+	}
+
+	public boolean delete(T toDelete)
+	{
+		boolean status = hibernateClient.delete(toDelete);
+		syncList();
+		return status;
+	}
+
 	public void syncList()
 	{
-		this.setEntrys(DictionaryResource.HIBERNATE_CLIENT.getList(objectClass));
+		this.setEntrys(hibernateClient.getList(objectClass));
 		afterSyncList();
 	}
 

@@ -29,8 +29,7 @@ public class RemoveSpecialWordAction
 		}
 		LOGGER.info("fromDB:" + fromDB);
 		ShortMessageResponse failedMessage = new ShortMessageResponse("Failed to delete your word!");
-		boolean failed = !DictionaryResource.HIBERNATE_CLIENT.delete(fromDB);
-		DictionaryResource.SPECIAL_WORD_MANAGER.syncList();
+		boolean failed = !DictionaryResource.SPECIAL_WORD_MANAGER.delete(fromDB);
 		return failed ? Response.status(Status.CONFLICT).entity(failedMessage).build() : Response.ok().build();
 	}
 }

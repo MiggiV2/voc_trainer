@@ -58,9 +58,7 @@ public class SaveDictionaryAction
 
 	private void save(List<Words> filtered, DictionaryEntry dictionaryEntry)
 	{
-		DictionaryResource.HIBERNATE_CLIENT.saveList(filtered);
-		DictionaryResource.HIBERNATE_CLIENT.save(dictionaryEntry);
-		DictionaryResource.DICTIONARY_MANAGER.syncList();
-		DictionaryResource.WORDS_MANAGER.syncList();
+		DictionaryResource.WORDS_MANAGER.saveList(filtered);
+		DictionaryResource.DICTIONARY_MANAGER.save(dictionaryEntry);
 	}
 }

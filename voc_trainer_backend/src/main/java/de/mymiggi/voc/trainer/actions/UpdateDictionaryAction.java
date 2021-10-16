@@ -16,9 +16,6 @@ import de.mymiggi.voc.trainer.entity.db.Words;
 
 public class UpdateDictionaryAction
 {
-	/*
-	 * 
-	 */
 	public Response run(String id, DiscordUser user, List<Words> newWords)
 	{
 		DictionaryEntry entry = DictionaryResource.DICTIONARY_MANAGER.getByID(id);
@@ -50,9 +47,9 @@ public class UpdateDictionaryAction
 
 			}
 		}
-		DictionaryResource.HIBERNATE_CLIENT.saveList(listToSave);
-		DictionaryResource.WORDS_MANAGER.syncList();
-		return Response.ok().build();
+		boolean failed = !DictionaryResource.WORDS_MANAGER.saveList(listToSave);
+		ShortMessageResponse messsage = new ShortMessageResponse("Failed to update!");
+		return failed ? Response.status(Status.CONFLICT).entity(messsage).build() : Response.ok().build();
 	}
 
 	private Words update(Words oldWord, Words newWord)

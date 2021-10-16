@@ -55,9 +55,9 @@
               <p>{{ dictionary.currentWord.op }}</p>
             </h5>
             <h5 v-else-if="anwser.show === 1">
-              Your words is {{ dictionary.currentWord.ger }}
+              Your word is {{ dictionary.currentWord.ger }}
             </h5>
-            <h5 v-else>Your words is {{ dictionary.currentWord.eng }}</h5>
+            <h5 v-else>Your word is {{ dictionary.currentWord.eng }}</h5>
           </div>
         </div>
         <div class="col-auto">
@@ -85,7 +85,7 @@
           <input
             type="text"
             class="form-control"
-            placeholder="Englisch word"
+            :placeholder="anwser.placeholder"
             v-model="anwser.input"
             autofocus
           />
@@ -244,6 +244,7 @@ var anwser = reactive({
   show: 0,
   isCorrect: null,
   lastWordIndex: null,
+  placeholder: "loading...",
 });
 
 var settings = reactive({
@@ -277,7 +278,19 @@ function setCheck() {
 }
 
 function loadDictionary() {
-  fetch(HOST + "api/get/dictionary?id=" + urlParams.get("id"))
+  var headerContent = getCookie("access_token")
+    ? {
+        Authorization: "Bearer " + getCookie("access_token"),
+        "Content-Type": "application/json",
+      }
+    : {
+        "Content-Type": "application/json",
+      };
+  fetch(HOST + "api/get/dictionary?id=" + urlParams.get("id"), {
+    credentails: "same-origin",
+    mode: "cors",
+    headers: headerContent,
+  })
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -401,6 +414,11 @@ function setShownStatus() {
       dictionary.currentWord.op.length == 0;
     var maxStatus = isOpEmpty ? 2 : 3;
     anwser.show = Math.floor(Math.random() * maxStatus);
+  }
+  if (anwser.show == 0) {
+    anwser.placeholder = "Enter the german word";
+  } else {
+    anwser.placeholder = "Enter the english word";
   }
 }
 </script>

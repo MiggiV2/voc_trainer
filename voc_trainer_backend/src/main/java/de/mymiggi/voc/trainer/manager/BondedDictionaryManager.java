@@ -3,7 +3,6 @@ package de.mymiggi.voc.trainer.manager;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.mymiggi.voc.trainer.DictionaryResource;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.db.BondedDictionary;
 
@@ -23,7 +22,7 @@ public class BondedDictionaryManager extends BasicManager<BondedDictionary>
 		if (oldEntity == null)
 		{
 			oldEntity = new BondedDictionary(user.getId(), dictionaryID);
-			isSaved = DictionaryResource.HIBERNATE_CLIENT.save(oldEntity);
+			isSaved = hibernateClient.save(oldEntity);
 			if (isSaved)
 			{
 				this.entrys.add(oldEntity);
@@ -32,7 +31,7 @@ public class BondedDictionaryManager extends BasicManager<BondedDictionary>
 		else
 		{
 			oldEntity.setDictionaryID(dictionaryID);
-			isSaved = DictionaryResource.HIBERNATE_CLIENT.update(oldEntity);
+			isSaved = hibernateClient.update(oldEntity);
 		}
 		if (isSaved)
 		{

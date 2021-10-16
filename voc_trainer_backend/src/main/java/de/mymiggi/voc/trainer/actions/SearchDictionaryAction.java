@@ -36,7 +36,20 @@ public class SearchDictionaryAction
 			{
 				if (words.toLowerCase().contains(searchRequest.getQuery().toLowerCase()))
 				{
-					hits++;
+					hits += 2;
+				}
+			}
+			if (hits == 0)
+			{
+				for (String words : current.getName().split(" "))
+				{
+					for (String queryWords : searchRequest.getQuery().split(" "))
+					{
+						if (words.toLowerCase().contains(queryWords.toLowerCase()))
+						{
+							hits++;
+						}
+					}
 				}
 			}
 			hitMap.put(current, hits);
@@ -48,7 +61,7 @@ public class SearchDictionaryAction
 	{
 		List<Entry<DictionaryEntry, Integer>> linkedList = new LinkedList<Entry<DictionaryEntry, Integer>>(hitMap.entrySet());
 		List<DictionaryEntry> response = new ArrayList<DictionaryEntry>();
-		Collections.sort(linkedList, (l1, l2) -> l1.getValue().compareTo(l2.getValue()));
+		Collections.sort(linkedList, (l1, l2) -> l2.getValue().compareTo(l1.getValue()));
 		linkedList.stream()
 			.filter(current -> current.getValue() > 0)
 			.forEach(current -> response.add(current.getKey()));

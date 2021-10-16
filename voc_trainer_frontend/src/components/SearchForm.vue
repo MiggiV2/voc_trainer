@@ -2,7 +2,7 @@
   <div class="container">
     <form @submit="search" onsubmit="return false">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search term" v-model="request.query" />
+      <input autofocus type="text" class="form-control" placeholder="Search term" v-model="request.query" />
       <button type="submit" class="btn btn-primary">
         <Search />
       </button>

@@ -27,8 +27,7 @@ public class AddSpecialWordAction
 		specialWord
 			.setUserID(user.getId())
 			.setAddedAt(LocalDateTime.now());
-		boolean failed = !DictionaryResource.HIBERNATE_CLIENT.save(specialWord);
-		DictionaryResource.SPECIAL_WORD_MANAGER.syncList();
+		boolean failed = !DictionaryResource.SPECIAL_WORD_MANAGER.save(specialWord);
 		ShortMessageResponse message = new ShortMessageResponse("Failed to add your word!");
 		return failed ? Response.status(Status.CONFLICT).entity(message).build() : Response.ok(specialWord).build();
 	}
