@@ -8,7 +8,7 @@ export function loadUser(accessToken, funcToRun) {
         },
     })
         .then(response => {
-            if (response.ok) {
+            if (response.status === 200) {
                 return response.json();
             }
             else if (response.status === 401) {
@@ -17,9 +17,11 @@ export function loadUser(accessToken, funcToRun) {
         })
         .then(response => {
             if (response != null) {
+                var role = response.admin ? '1' : '0';
                 localStorage.setItem('avatar', response.avatar);
                 localStorage.setItem('id', response.id);
                 localStorage.setItem('username', response.name);
+                localStorage.setItem('role', role);
                 funcToRun();
             }
         });
@@ -34,7 +36,7 @@ export function getAvatarURL() {
 }
 
 export function getAvatarURLFromUser(user) {
-    const avatar = user.avater;
+    const avatar = user.avatar;
     const id = user.id;
     return (avatar == null || avatar.length < 10)
         ? null

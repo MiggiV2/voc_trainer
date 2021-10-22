@@ -5,6 +5,7 @@ public class DiscordUser
 	private String name;
 	private String avatar;
 	private String id;
+	private boolean isAdmin;
 
 	public DiscordUser()
 	{
@@ -58,6 +59,17 @@ public class DiscordUser
 	public DiscordUser setId(String id)
 	{
 		this.id = id;
+		return this;
+	}
+
+	public boolean isAdmin()
+	{
+		return isAdmin;
+	}
+
+	public DiscordUser setAdmin(boolean isAdmin)
+	{
+		this.isAdmin = isAdmin;
 		return this;
 	}
 }

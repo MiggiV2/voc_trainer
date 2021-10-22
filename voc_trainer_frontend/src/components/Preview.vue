@@ -2,7 +2,7 @@
   <div class="preview-wrapped">
     <div v-if="preview.content.length == 0" class="spinner-border"></div>
     <div
-      class="box-wrapped-xl"
+      class="box-wrapped box-xl"
       v-for="(item, index) in preview.content"
       :key="index"
     >

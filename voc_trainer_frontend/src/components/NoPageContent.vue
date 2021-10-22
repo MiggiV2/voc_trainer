@@ -9,8 +9,8 @@
       <h4>There is no page with this url.</h4>
     </div>
     <div class="box-footer">
-        <a href="/" class="btn btn-primary">Back to home</a>
-    </div>    
+      <a href="/" class="btn btn-primary">Back to home</a>
+    </div>
   </div>
 </template>
 
@@ -23,7 +23,7 @@
   border-radius: 5px 10px;
   padding-bottom: 1rem;
 }
-.box-body{
-    margin-bottom: 1.5rem;
+.box-body {
+  margin-bottom: 1.5rem;
 }
 </style>

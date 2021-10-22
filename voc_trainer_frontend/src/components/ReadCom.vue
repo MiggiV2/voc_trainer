@@ -4,41 +4,45 @@
     <div v-if="show.content === null" class="dictionary">
       <div class="row header" v-if="dictionary.content.user != null">
         <div class="col-auto">
-          <a :href="'/users?id=' + dictionary.content.user.id">
-            <img
-              class="avatar"
-              v-if="dictionary.content.user.avatarURL != null"
-              :src="dictionary.content.user.avatarURL"
-              :title="dictionary.content.user.name"
-            />
-          </a>
+          <div
+            class="train-link mobile"
+            role="button"
+            v-if="!show.edit"
+            title="Train this dictionary"
+            data-bs-toggle="modal"
+            data-bs-target="#trainModal"
+          >
+            <Play style="height: 25px; width: 25px" />
+          </div>
+          <div
+            class="desktop train-link btn btn-secondary"
+            role="button"
+            v-if="!show.edit"
+            title="Train this dictionary"
+            data-bs-toggle="modal"
+            data-bs-target="#trainModal"
+          >
+            Train<Play style="height: 25px; width: 25px" />
+          </div>
         </div>
         <div class="col">
-          <h3 class="title">
-            {{ dictionary.content.name }}
-            <a
-              class="desktop"
-              :href="'/users?id=' + dictionary.content.user.id"
-            >
+          <div>
+            <h3 class="title">
+              {{ dictionary.content.name }}
+              <a
+                class="desktop"
+                :href="'/users?id=' + dictionary.content.user.id"
+              >
+                by {{ dictionary.content.user.name }}
+              </a>
+            </h3>
+            <a class="mobile" :href="'/users?id=' + dictionary.content.user.id">
               by {{ dictionary.content.user.name }}
             </a>
-          </h3>
-          <a class="mobile" :href="'/users?id=' + dictionary.content.user.id">
-            by {{ dictionary.content.user.name }}
-          </a>
+          </div>
         </div>
         <div class="col-auto">
           <div class="btn-group" role="group">
-            <div
-              class="group-item"
-              role="button"
-              v-if="!show.edit"
-              title="Train this dictionary"
-              data-bs-toggle="modal"
-              data-bs-target="#trainModal"
-            >
-              <Journal />
-            </div>
             <div class="group-item" v-if="isYours()">
               <div v-if="!show.edit">
                 <div
@@ -323,7 +327,8 @@ import Trash from "./icons/Trash.vue";
 import Check from "./icons/Check.vue";
 import Cross from "./icons/X.vue";
 import Gear from "./icons/Gear.vue";
-import Journal from "./icons/Journal.vue";
+//import Journal from "./icons/Journal.vue";
+import Play from "./icons/Play.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 var dictionary = reactive({
@@ -585,11 +590,22 @@ function edit() {
 }
 
 function isYours() {
-  return dictionary.content.user.id == localStorage.getItem("id");
+  return (
+    dictionary.content.user.id == localStorage.getItem("id") ||
+    localStorage.getItem("role") == 1
+  );
 }
 </script>
 
 <style scoped>
+a:link {
+  text-decoration: unset;
+  color: unset;
+}
+a:visited {
+  text-decoration: unset;
+  color: unset;
+}
 .dictionary-wrapped {
   margin: 0 auto 8rem;
   max-width: 60rem;
@@ -621,9 +637,6 @@ input:focus {
 .words {
   margin-bottom: 1.4rem;
 }
-.sub-title {
-  margin-bottom: 1.4rem;
-}
 .avatar {
   height: 45px;
   border: solid 0;
@@ -651,13 +664,19 @@ input:focus {
   color: unset;
   text-decoration: unset;
 }
-.desktop {
-  color: unset;
-  text-decoration: unset;
+.mobile .title {
+  margin-top: 1rem;
 }
-.desktop :hover {
-  color: unset;
+.mobile a {
   text-decoration: unset;
+  color: unset;
+}
+.train-link {
+  margin-left: 6px;
+  width: 100%;
+  text-align: left;
+  max-width: 5.6rem;
+  margin-bottom: 1.4rem;
 }
 .group-item {
   margin-right: 0.5rem;
@@ -671,6 +690,9 @@ input:focus {
   }
   .desktop {
     display: none;
+  }
+  .sub-title {
+    margin-bottom: 0.5rem;
   }
   .dictionary-wrapped {
     max-width: 97vw;

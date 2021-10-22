@@ -17,7 +17,7 @@
         v-if="saved.content.length == 0 && saved.hasContent"
         class="spinner-border"
       ></div>
-      <div class="box-wrapped-xl" v-for="(item, index) in saved.content" :key="index">
+      <div class="box-wrapped box-xl" v-for="(item, index) in saved.content" :key="index">
         <div
           class="box"
           data-bs-toggle="modal"

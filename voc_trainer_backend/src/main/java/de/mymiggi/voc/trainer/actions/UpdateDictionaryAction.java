@@ -24,10 +24,10 @@ public class UpdateDictionaryAction
 			ShortMessageResponse message = new ShortMessageResponse("Nothing found for id " + id);
 			return Response.status(Status.NOT_FOUND).entity(message).build();
 		}
-		if (!entry.getUserID().equals(user.getId()))
+		if (!entry.getUserID().equals(user.getId()) &&  !user.isAdmin())
 		{
 			ShortMessageResponse message = new ShortMessageResponse("You are not the owner!");
-			return Response.status(Status.UNAUTHORIZED).entity(message).build();
+			return Response.status(Status.FORBIDDEN).entity(message).build();
 		}
 		List<Words> listToSave = new ArrayList<Words>();
 		List<Words> dictionary = DictionaryResource.WORDS_MANAGER.getWordsByDictionary(entry);

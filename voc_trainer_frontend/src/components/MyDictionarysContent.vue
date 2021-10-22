@@ -9,7 +9,7 @@
         class="spinner-border"
       ></div>
       <div
-        class="box-wrapped-xl"
+        class="box-wrapped"
         v-for="(item, index) in yours.content"
         :key="index"
       >
@@ -34,7 +34,7 @@
           </a>
         </div>
       </div>
-      <div class="box-wrapped-md" v-if="!yours.hasContent">
+      <div class="box-wrapped box-sm" v-if="!yours.hasContent">
         <div class="box">
           <h3>How to create my dictionary?</h3>
           <hr />
@@ -121,10 +121,10 @@ a:visited {
   color: unset;
   text-decoration: none;
 }
-.box-wrapped-md {
+.box-md {
   text-align: center;
 }
-.box-wrapped-md a:link {
+.box-md a:link {
   color: #0a58ca;
 }
 .title {

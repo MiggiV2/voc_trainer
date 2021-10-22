@@ -41,23 +41,31 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
               <a class="dropdown-item" href="/train" title="Train page">
-                Train <Journal width="17" height="17"
+                Train <Journal class="icon-right" width="17" height="17"
               /></a>
             </li>
             <li>
-              <a class="dropdown-item" href="/my-dictionarys" title="Show your dictionarys">
-                Yours <Book />
+              <a
+                class="dropdown-item"
+                href="/my-dictionarys"
+                title="Show your dictionarys"
+              >
+                Yours <Book class="icon-right" />
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="/saved" title="Show your marked words">
-                Saved <BookmarkCheckFill />
+              <a
+                class="dropdown-item"
+                href="/saved"
+                title="Show your marked words"
+              >
+                Saved <BookmarkCheckFill class="icon-right" />
               </a>
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
               <a @click="logout()" class="dropdown-item text-danger" href="#">
-                Logout <Logout />
+                Logout <Logout class="icon-right" />
               </a>
             </li>
           </ul>
@@ -92,8 +100,9 @@ var appUser = reactive({
 
 if (getCookie("access_token") && !getCookie("season_id")) {
   var token = getCookie("access_token");
-  loadUser(token, setUser);
-  setCookieSeasson("season_id", uuidv4());
+  setTimeout(function () {
+    loadUser(token, setUser);
+  }, 500);
 }
 if (getCookie("access_token") && getCookie("season_id")) {
   setUser();
@@ -102,6 +111,7 @@ if (getCookie("access_token") && getCookie("season_id")) {
 function setUser() {
   appUser.username = localStorage.getItem("username");
   appUser.avatarurl = getAvatarURL();
+  setCookieSeasson("season_id", uuidv4());
 }
 
 function logout() {
@@ -142,6 +152,7 @@ function openLogin() {
   right: 0px;
   left: 0px;
   z-index: 100;
+  border-bottom: 1px black solid;
 }
 a {
   cursor: pointer;
@@ -164,6 +175,10 @@ a:visited {
   top: unset;
   left: unset;
   right: 5px;
+}
+.icon-right {
+  right: 1.2rem;
+  position: absolute;
 }
 @media (max-width: 768px) {
   .container {

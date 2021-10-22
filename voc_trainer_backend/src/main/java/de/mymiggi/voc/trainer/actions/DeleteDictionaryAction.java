@@ -24,7 +24,7 @@ public class DeleteDictionaryAction
 			ShortMessageResponse messageResponse = new ShortMessageResponse("Can't find dictionary!");
 			return Response.status(Status.NOT_FOUND).entity(messageResponse).build();
 		}
-		if (!dictionaryFromDB.getUserID().equals(user.getId()))
+		if (!dictionaryFromDB.getUserID().equals(user.getId()) && !user.isAdmin())
 		{
 			return Response.status(Status.FORBIDDEN).build();
 		}

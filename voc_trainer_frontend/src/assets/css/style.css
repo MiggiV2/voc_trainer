@@ -3,23 +3,20 @@ body {
 }
 
 .box-wrapped {
-    max-width: 30rem;
-    margin: auto;
-}
-
-.box-wrapped-md {
-    max-width: 40rem;
-    margin: auto;
-}
-
-.box-wrapped-xl {
     max-width: 50rem;
     margin: auto;
 }
 
-.box-wrapped-sm {
+.box-md {
+    max-width: 40rem;
+}
+
+.box-xl {
+    max-width: 50rem;
+}
+
+.box-sm {
     max-width: 22rem;
-    margin: auto;
 }
 
 .box {
@@ -28,4 +25,17 @@ body {
     margin: 2rem auto;
     padding: 15px 15px 5px;
     border-radius: 5px 10px;
+}
+
+.box-wrapped :hover hr{
+    background-color: white;
+}
+
+.box-wrapped hr{
+    background-color: black;
+}
+
+.box-wrapped :hover {
+    background-color: rgb(24, 24, 24);
+    color: white;
 }

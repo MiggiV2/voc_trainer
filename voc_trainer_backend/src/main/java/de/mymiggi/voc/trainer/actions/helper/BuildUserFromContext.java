@@ -26,6 +26,7 @@ public class BuildUserFromContext
 		return new DiscordUser()
 			.setAvatar(userMap.get("avater"))
 			.setName(userMap.get("user"))
-			.setId(userMap.get("id"));
+			.setId(userMap.get("id"))
+			.setAdmin(ctx.isUserInRole("admin"));
 	}
 }

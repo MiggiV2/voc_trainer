@@ -64,7 +64,6 @@ public class IntrospectionAction
 						runningClearThread = false;
 					}
 					CACHE.clear();
-					LOGGER.info("Cleared cache!");
 				}
 			}
 		};
