@@ -9,10 +9,10 @@
 }
 
 :root.dark-mode {
-    --background-color-primary: #1e1e1e;
-    --background-color-secondary: #2d2d30;
-    --accent-color: #383838;
-    --accent-color-2: #383838;
+    --background-color-primary: #202225;
+    --background-color-secondary: #2F3136;
+    --accent-color: #36393F;
+    --accent-color-2: #36393F;
     --text-primary-color: #ddd;
     --text-secondary-color: rgb(173, 173, 173);
     --mode: "dark";
@@ -59,7 +59,7 @@ body {
 .dropdown-menu {
     color: var(--text-primary-color);
     background-color: var(--accent-color);
-    border: solid 1px var(--accent-color-2);
+    border: solid 1px var(--text-primary-color);
 }
 
 .dropdown-item{

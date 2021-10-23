@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapped">
     <div v-if="getCookie('access_token')">
       <div class="title">
         <h2>{{ title.content }}</h2>
@@ -139,6 +139,9 @@ a:visited {
 .spinner-border {
   margin-left: 49vw;
   margin-top: 2rem;
+}
+.wrapped{
+  padding-bottom: 4rem;
 }
 @media (max-width: 768px) {
   .title {

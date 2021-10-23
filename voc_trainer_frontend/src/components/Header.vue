@@ -24,11 +24,11 @@
         </a>
       </div>
       <div v-else class="col-auto">
-        <a v-if="theme != 'dark'" @click="setDarkMode">
-          <Moon />
-        </a>
-        <a v-else @click="setLightMode">
+        <a v-if="theme.mode == 'dark-mode'" @click="setLightMode">
           <Sun />
+        </a>
+        <a v-else @click="setDarkMode">
+          <Moon />
         </a>
       </div>
       <div class="col"></div>
@@ -213,6 +213,9 @@ a:link {
 a:visited {
   color: unset;
   text-decoration: none;
+}
+li:hover{
+  color: var(--accent-color-2);
 }
 .avatar {
   max-height: 40px;

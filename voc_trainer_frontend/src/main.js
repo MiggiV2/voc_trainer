@@ -44,8 +44,10 @@ const SimpleRouter = {
 }
 
 if (localStorage.getItem('theme') == null) {
+    var theme = getMediaPreference();
     console.log(localStorage.getItem('theme'));
-    localStorage.setItem('theme', getMediaPreference());
+    localStorage.setItem('theme', theme);
+    document.documentElement.className = theme;
 }
 
 const app = createApp(SimpleRouter);
