@@ -43,6 +43,8 @@ export function getAvatarURLFromUser(user) {
         : 'https://cdn.discordapp.com/avatars/' + id + '/' + avatar + '.webp?size=128'
 }
 
+export var theme = localStorage.getItem("theme");
+
 function logout() {
     localStorage.removeItem("username");
     localStorage.removeItem("avatar");

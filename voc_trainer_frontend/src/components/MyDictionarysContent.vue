@@ -130,6 +130,7 @@ a:visited {
 .title {
   margin: 2rem auto 3.5rem;
   text-align: center;
+  color: var(--text-primary-color);
 }
 .avatar {
   max-height: 40px;

@@ -43,6 +43,20 @@ const SimpleRouter = {
     }
 }
 
+if (localStorage.getItem('theme') == null) {
+    console.log(localStorage.getItem('theme'));
+    localStorage.setItem('theme', getMediaPreference());
+}
+
 const app = createApp(SimpleRouter);
 
 app.mount('#app')
+
+function getMediaPreference() {
+    const hasDarkPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (hasDarkPreference) {
+        return "dark-mode";
+    } else {
+        return "light-mode";
+    }
+}

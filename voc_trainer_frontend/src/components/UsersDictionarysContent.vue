@@ -6,11 +6,11 @@
       </div>
       <div v-if="dictionarys.content.length == 0" class="spinner-border"></div>
       <div
-        class="dictionarys"
+        class="box-wrapped"
         v-for="(item, index) in dictionarys.content"
         :key="index"
       >
-        <div class="dictionarys-item">
+        <div class="box">
           <a :href="'/read?id=' + item.id">
             <div class="row">
               <div class="col-auto">
@@ -115,6 +115,7 @@ a:visited {
 .title {
   margin: 2rem auto 3.5rem;
   text-align: center;
+  color: var(--text-primary-color);
 }
 .dictionarys-item {
   border: solid 1px black;

@@ -24,7 +24,7 @@
             <BookmarkCheckFill />
           </button>
           <button
-            class="btn btn-outline-primary top-buttons show-button"
+            class="btn btn-outline-dark top-buttons show-button"
             data-bs-toggle="modal"
             data-bs-target="#helpWordModal"
           >
@@ -225,6 +225,7 @@ var urlParams = new URLSearchParams(window.location.search);
 var status = reactive({
   showTainer: urlParams.has("id"),
 });
+
 var dictionary = reactive({
   content: {
     name: "...",
@@ -235,9 +236,12 @@ var dictionary = reactive({
     eng: "...",
     ger: "...",
     op: "...",
+    index: 0,
     specialWord: false,
   },
 });
+
+var toAsk = [];
 
 var anwser = reactive({
   input: "",
@@ -251,6 +255,7 @@ var settings = reactive({
   ask: 2,
 });
 
+var requestCoolDown = false;
 var startedHideThread = 0;
 
 if (localStorage.getItem("settings.ask")) {
@@ -301,6 +306,7 @@ function loadDictionary() {
     .then((response) => {
       if (response != null) {
         dictionary.content = response;
+        resetToAsk();
         setRandomWord(0);
       }
     });
@@ -310,48 +316,60 @@ function addSpecialWord() {
   var data = {
     wordID: dictionary.currentWord.id,
   };
-  fetch(HOST + "api/add/special-word", {
-    method: "PUT",
-    credentails: "same-origin",
-    mode: "cors",
-    body: JSON.stringify(data),
-    headers: {
-      Authorization: "Bearer " + getCookie("access_token"),
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.ok) {
-      dictionary.currentWord.specialWord = true;
-      var index = dictionary.currentWord.index;
-      dictionary.content.words[index].specialWord = true;
-    } else {
-      alert(response.statusText);
-    }
-  });
+  if (!requestCoolDown) {
+    requestCoolDown = true;
+    setTimeout(function () {
+      requestCoolDown = false;
+    }, 800);
+    fetch(HOST + "api/add/special-word", {
+      method: "PUT",
+      credentails: "same-origin",
+      mode: "cors",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: "Bearer " + getCookie("access_token"),
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.ok) {
+        dictionary.currentWord.specialWord = true;
+        var index = dictionary.currentWord.index;
+        dictionary.content.words[index].specialWord = true;
+      } else {
+        alert(response.statusText);
+      }
+    });
+  }
 }
 
 function removeSpecialWord() {
   var data = {
     wordID: dictionary.currentWord.id,
   };
-  fetch(HOST + "api/remove/special-word", {
-    method: "PUT",
-    credentails: "same-origin",
-    mode: "cors",
-    body: JSON.stringify(data),
-    headers: {
-      Authorization: "Bearer " + getCookie("access_token"),
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.ok) {
-      dictionary.currentWord.specialWord = false;
-      var index = dictionary.currentWord.index;
-      dictionary.content.words[index].specialWord = false;
-    } else {
-      alert(response.statusText);
-    }
-  });
+  if (!requestCoolDown) {
+    requestCoolDown = true;
+    setTimeout(function () {
+      requestCoolDown = false;
+    }, 800);
+    fetch(HOST + "api/remove/special-word", {
+      method: "PUT",
+      credentails: "same-origin",
+      mode: "cors",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: "Bearer " + getCookie("access_token"),
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.ok) {
+        dictionary.currentWord.specialWord = false;
+        var index = dictionary.currentWord.index;
+        dictionary.content.words[index].specialWord = false;
+      } else {
+        alert(response.statusText);
+      }
+    });
+  }
 }
 
 function check() {
@@ -359,6 +377,7 @@ function check() {
   var isCorrect = correctWord === anwser.input;
   if (isCorrect) {
     setTimeout(function () {
+      toAsk.splice(dictionary.currentWord.index, 1);
       setRandomWord(0);
     }, 800);
   }
@@ -384,23 +403,16 @@ function getAnwser() {
   }
 }
 
-function setRandomWord(counter) {
-  var randomIndex = Math.floor(Math.random() * dictionary.content.words.length);
-  if (
-    anwser.lastWordIndex !== null &&
-    anwser.lastWordIndex === randomIndex &&
-    dictionary.content.words.length > 1 &&
-    counter < 100
-  ) {
-    console.log("Is same word -> new...");
-    setRandomWord(counter++);
-  } else {
-    anwser.lastWordIndex = randomIndex;
-    anwser.input = "";
-    dictionary.currentWord = dictionary.content.words[randomIndex];
-    dictionary.currentWord.index = randomIndex;
-    setShownStatus();
+function setRandomWord() {
+  if (toAsk.length == 0) {
+    resetToAsk();
   }
+  var randomIndex = Math.floor(Math.random() * toAsk.length);
+  anwser.lastWordIndex = randomIndex;
+  anwser.input = "";
+  dictionary.currentWord = toAsk[randomIndex];
+  dictionary.currentWord.index = randomIndex;
+  setShownStatus();
 }
 
 function setShownStatus() {
@@ -421,6 +433,19 @@ function setShownStatus() {
     anwser.placeholder = "Enter the english word";
   }
 }
+
+function resetToAsk() {
+  for (var i = 0; i < dictionary.content.words.length; i++) {
+    toAsk.push(dictionary.content.words[i]);
+  }
+  console.log("words set / rested!");
+}
+/*
+function getEyeClass()
+{
+  return localStorage.getItem("theme") == 'dark-mode' ? 'btn-outline-light' : 'btn-outline-primary';
+}
+*/
 </script>
 
 <style scoped>
@@ -429,10 +454,6 @@ function setShownStatus() {
   margin: auto;
 }
 .box {
-  border: solid black 1px;
-  border-radius: 5px 10px 5px 10px;
-  max-width: 98%;
-  margin: 2rem auto;
   text-align: center;
   padding: 5px;
 }
@@ -454,6 +475,10 @@ function setShownStatus() {
 form {
   margin-bottom: 2rem;
   margin-top: 2rem;
+}
+.btn-outline-dark{
+  border-color: var(--text-primary-color);;
+  color: var(--text-primary-color);
 }
 input:focus {
   outline: none;

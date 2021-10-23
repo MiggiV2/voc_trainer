@@ -76,7 +76,7 @@ a:visited {
   text-decoration: none;
 }
 .preview-wrapped {
-  margin-bottom: 4rem;
+  padding-bottom: 4rem;
 }
 .preview {
   max-width: 50rem;
@@ -85,7 +85,6 @@ a:visited {
 .preview-item {
   border: solid 1px black;
   border-radius: 5px 10px 5px 10px;
-  padding: 15px;
   max-width: 98%;
   margin: 2rem auto 2rem;
   cursor: pointer;
@@ -100,5 +99,9 @@ a:visited {
 }
 .box {
   text-align: unset;
+  background-color: var(--accent-color) !important;
+  color: var(--text-primary-color);
+  border-color: var(--accent-color-2);
+  padding: 12px;
 }
 </style>

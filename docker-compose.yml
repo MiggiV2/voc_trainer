@@ -19,13 +19,13 @@ services:
       - vocnet
 
   auth:
-    image: 'voc-auth'
+    image: 'mymiggi/voc-auth'
     container_name: voc-auth      
     networks:
       - vocnet
 
   backend:
-    image: 'voc-backend'
+    image: 'mymiggi/voc-backend'
     container_name: voc-backend    
     networks:
       - vocnet
@@ -33,10 +33,10 @@ services:
       - 8888:8888
 
   frontend:
-    image: 'voc-frontend'
+    image: 'mymiggi/voc-frontend'
     container_name: voc-frontend    
     networks:
       - vocnet
     ports:
-      - 3000:80
+      - 3000:3000
     

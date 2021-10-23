@@ -1,7 +1,7 @@
 <template>
+  <!--:class="{ 'dark-theme': theme == 'dark' }"-->
   <div class="footer-wrapped desktop">
     <div class="row footer">
-      
       <div class="col-auto">
         <Discord />
       </div>
@@ -36,13 +36,14 @@ var botURL =
 
 <style scoped>
 .footer-wrapped {
-  min-width: 100vw;
-  background-color: #f0f0f0;
+  background-color: var(--background-color-secondary) !important;
+  color: var(--text-primary-color);
+  border-top: 1px var(--accent-color-2) solid;
+  min-width: 100vw;  
   position: fixed;
   bottom: 0;
   height: 35px;
-  z-index: 100;
-  border-top: 1px black solid;
+  z-index: 100;  
 }
 .footer {
   padding: 6px;

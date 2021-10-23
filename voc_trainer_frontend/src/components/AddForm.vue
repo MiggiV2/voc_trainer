@@ -188,6 +188,14 @@ function isEmpty(_string1) {
   max-width: 50rem;
   margin: auto;
 }
+.form-control {
+  background-color: unset;
+  color: var(--text-primary-color);
+}
+::placeholder {
+  color: var(--text-secondary-color);
+  opacity: 1;
+}
 .form-group {
   margin-bottom: 1rem;
 }
@@ -203,10 +211,5 @@ function isEmpty(_string1) {
 input:focus {
   outline: none;
   box-shadow: none;
-}
-.box {
-  border: solid 1px black;
-  border-radius: 5px 10px 5px 10px;
-  padding: 15px;
 }
 </style>

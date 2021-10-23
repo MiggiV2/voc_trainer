@@ -45,7 +45,14 @@ input:focus {
   box-shadow: none;
 }
 .container {
-  margin-top: 3rem;
+  padding-top: 3rem;
+}
+.input-group {
+  margin: 5px;
+}
+.form-control {
+  background-color: unset;
+  color: var(--text-primary-color);
 }
 @media (max-width: 768px) {
   .container {

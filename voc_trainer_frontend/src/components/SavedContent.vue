@@ -17,7 +17,11 @@
         v-if="saved.content.length == 0 && saved.hasContent"
         class="spinner-border"
       ></div>
-      <div class="box-wrapped box-xl" v-for="(item, index) in saved.content" :key="index">
+      <div
+        class="box-wrapped box-xl"
+        v-for="(item, index) in saved.content"
+        :key="index"
+      >
         <div
           class="box"
           data-bs-toggle="modal"
@@ -31,9 +35,9 @@
       </div>
       <div class="box-wrapped" v-if="!saved.hasContent">
         <div class="box">
-        <h3>How to save words?</h3>
-        <hr />
-        <p>Go to <a href="/train">train</a> and click <Bookmark /></p>
+          <h3>How to save words?</h3>
+          <hr />
+          <p>Go to <a href="/train">train</a> and click <Bookmark /></p>
         </div>
       </div>
     </div>
@@ -229,6 +233,11 @@ a:visited {
 .title {
   margin: 2rem auto 3.5rem;
   text-align: center;
+  color: var(--text-primary-color);
+}
+.form-control {
+  background-color: unset;
+  color: var(--text-primary-color);
 }
 .title h2 {
   margin: 1rem;

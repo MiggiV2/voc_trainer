@@ -1,7 +1,7 @@
 <template>
   <div class="preview-wrapped">
-    <div class="preview" v-for="(item, index) in preview.content" :key="index">
-      <div class="preview-item">
+    <div class="box-wrapped" v-for="(item, index) in preview.content" :key="index">
+      <div class="box">
         <a :href="'/read?id=' + item.id">
           <div class="row">
             <div class="col-auto">
@@ -82,21 +82,6 @@ a:link {
 a:visited {
   color: unset;
   text-decoration: none;
-}
-.preview-wrapped {
-  margin-bottom: 4rem;
-}
-.preview{
-  margin: 2rem auto 2rem;
-  max-width: 50rem;
-}
-.preview-item {
-  border: solid 1px black;
-  border-radius: 5px 10px 5px 10px;
-  padding: 15px;
-  max-width: 98%;
-  margin: auto;
-  cursor: pointer;
 }
 .avatar {
   max-height: 40px;

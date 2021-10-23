@@ -1,6 +1,6 @@
 <template>
   <!--data-bs-toggle="modal" data-bs-target="#editModal"-->
-  <div class="dictionary-wrapped">
+  <div class="dictionary-wrapped" :class="{ 'dark-theme': theme == 'dark' }">
     <div v-if="show.content === null" class="dictionary">
       <div class="row header" v-if="dictionary.content.user != null">
         <div class="col-auto">
@@ -15,7 +15,8 @@
             <Play style="height: 25px; width: 25px" />
           </div>
           <div
-            class="desktop train-link btn btn-secondary"
+            class="desktop train-link btn btn-outline-dark"
+            :class="{ 'dark-theme': theme == 'dark' }"
             role="button"
             v-if="!show.edit"
             title="Train this dictionary"
@@ -316,7 +317,7 @@
 <script setup>
 import { reactive } from "vue";
 import { HOST, sha512 } from "../tools/auth";
-import { getAvatarURLFromUser } from "../tools/user";
+import { getAvatarURLFromUser, theme } from "../tools/user";
 import { getCookie } from "../tools/cookie";
 import Toast from "./SuccessToast.vue";
 
@@ -608,14 +609,18 @@ a:visited {
 }
 .dictionary-wrapped {
   margin: 0 auto 8rem;
-  max-width: 60rem;
+  max-width: 62rem;
 }
 .dictionary {
   border: solid black 1px;
   border-radius: 10px 5px 10px 5px;
   max-width: 98%;
+  padding: 8px;
   margin: 4rem auto;
   text-align: center;
+  color: var(--text-primary-color);
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color-2);
 }
 .dictionary a {
   font-size: 1rem;
@@ -633,6 +638,11 @@ input:focus {
 }
 .form-control {
   background-color: unset;
+  color: var(--text-primary-color);
+}
+.btn-outline-dark{
+  border-color: var(--text-primary-color);;
+  color: var(--text-primary-color);
 }
 .words {
   margin-bottom: 1.4rem;

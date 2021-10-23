@@ -146,12 +146,7 @@ function startTainer() {
   margin: 4rem auto;
 }
 .box {
-  border: solid black 1px;
-  border-radius: 5px 10px 5px 10px;
-  max-width: 98%;
-  margin: 4rem auto;
   text-align: center;
-  padding: 5px;
 }
 .spinner-border {
   max-width: 20px;

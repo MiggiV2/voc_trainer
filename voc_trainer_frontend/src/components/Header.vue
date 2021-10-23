@@ -1,9 +1,15 @@
 <template>
+  <!--:class="{ 'dark-theme': theme == 'dark' }"-->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container row">
       <div class="col-auto">
         <a href="/" title="Home">
-          <House />
+          <HouseOutline
+            width="21"
+            height="21"
+            v-if="theme.mode == 'dark-mode'"
+          />
+          <House v-else />
         </a>
       </div>
       <div v-if="getCookie('access_token')" class="col-auto">
@@ -13,7 +19,16 @@
       </div>
       <div v-if="getCookie('access_token')" class="col-auto">
         <a href="/add" title="Add new dictionary">
-          <Add />
+          <AddOutline width="20" height="20" v-if="theme.mode == 'dark-mode'" />
+          <Add v-else />
+        </a>
+      </div>
+      <div v-else class="col-auto">
+        <a v-if="theme != 'dark'" @click="setDarkMode">
+          <Moon />
+        </a>
+        <a v-else @click="setLightMode">
+          <Sun />
         </a>
       </div>
       <div class="col"></div>
@@ -62,6 +77,16 @@
                 Saved <BookmarkCheckFill class="icon-right" />
               </a>
             </li>
+            <li v-if="theme.mode == 'dark-mode'">
+              <a class="dropdown-item" @click="setLightMode">
+                Lightmode <Sun class="icon-right" />
+              </a>
+            </li>
+            <li v-else>
+              <a class="dropdown-item" @click="setDarkMode">
+                Darkmode <Moon class="icon-right" />
+              </a>
+            </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
               <a @click="logout()" class="dropdown-item text-danger" href="#">
@@ -85,17 +110,25 @@ import { v4 as uuidv4 } from "uuid";
 import { reactive } from "vue";
 
 import House from "./icons/House.vue";
+import HouseOutline from "./icons/HouseOutline.vue";
 import Add from "./icons/Add.vue";
+import AddOutline from "./icons/AddOutline.vue";
 import Journal from "./icons/Journal.vue";
 import Login from "./icons/Login.vue";
 import Logout from "./icons/Logout.vue";
 import Person from "./icons/Person.vue";
 import Book from "./icons/Book.vue";
 import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue";
+import Moon from "./icons/Moon.vue";
+import Sun from "./icons/Sun.vue";
 
 var appUser = reactive({
   username: String,
   avatarurl: null,
+});
+
+var theme = reactive({
+  mode: localStorage.getItem("theme"),
 });
 
 if (getCookie("access_token") && !getCookie("season_id")) {
@@ -106,6 +139,20 @@ if (getCookie("access_token") && !getCookie("season_id")) {
 }
 if (getCookie("access_token") && getCookie("season_id")) {
   setUser();
+}
+
+function setDarkMode() {
+  localStorage.setItem("theme", "dark-mode");
+  document.documentElement.className = "dark-mode";
+  theme.mode = "dark-mode";
+  console.log(theme.mode);
+}
+
+function setLightMode() {
+  localStorage.setItem("theme", "light-mode");
+  document.documentElement.className = "light-mode";
+  theme.mode = "light-mode";
+  console.log(theme.mode);
 }
 
 function setUser() {
@@ -138,7 +185,7 @@ function openLogin() {
   margin: auto;
 }
 .dummy {
-  height: 58px;
+  height: 57px;
 }
 .navbar {
   padding: unset;
@@ -153,6 +200,8 @@ function openLogin() {
   left: 0px;
   z-index: 100;
   border-bottom: 1px black solid;
+  background-color: var(--background-color-secondary) !important;
+  color: var(--text-primary-color);
 }
 a {
   cursor: pointer;

@@ -1,5 +1,26 @@
+:root {
+    --background-color-secondary: #f1f1f1;
+    --background-color-primary: #fafafa;
+    --accent-color: #fafafa;
+    --accent-color-2: #222;
+    --text-primary-color: #222;
+    --text-secondary-color: rgb(92, 92, 92);
+    --mode: "light";
+}
+
+:root.dark-mode {
+    --background-color-primary: #1e1e1e;
+    --background-color-secondary: #2d2d30;
+    --accent-color: #383838;
+    --accent-color-2: #383838;
+    --text-primary-color: #ddd;
+    --text-secondary-color: rgb(173, 173, 173);
+    --mode: "dark";
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-primary-color) !important;
 }
 
 .box-wrapped {
@@ -20,22 +41,27 @@ body {
 }
 
 .box {
-    border: solid 1px black;
+    color: var(--text-primary-color);
+    background-color: var(--accent-color);
+    border: solid 1px var(--accent-color-2);
     max-width: 98%;
     margin: 2rem auto;
-    padding: 15px 15px 5px;
+    padding: 12px;
     border-radius: 5px 10px;
 }
 
-.box-wrapped :hover hr{
-    background-color: white;
+.modal-content {
+    color: var(--text-primary-color);
+    background-color: var(--accent-color);
+    border: solid 1px var(--accent-color-2);
 }
 
-.box-wrapped hr{
-    background-color: black;
+.dropdown-menu {
+    color: var(--text-primary-color);
+    background-color: var(--accent-color);
+    border: solid 1px var(--accent-color-2);
 }
 
-.box-wrapped :hover {
-    background-color: rgb(24, 24, 24);
-    color: white;
+.dropdown-item{
+    color: unset;
 }
