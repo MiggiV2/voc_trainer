@@ -26,8 +26,10 @@
             Train<Play style="height: 25px; width: 25px" />
           </div>
         </div>
+        <div v-if="show.edit" class="col-1 desktop">
+        </div>
         <div class="col">
-          <div>
+          <div v-if="!show.edit">
             <h3 class="title">
               {{ dictionary.content.name }}
               <a
@@ -40,6 +42,15 @@
             <a class="mobile" :href="'/users?id=' + dictionary.content.user.id">
               by {{ dictionary.content.user.name }}
             </a>
+          </div>
+          <div v-else>
+            <div></div>
+            <input
+              type="text"
+              class="form-control title-form"
+              placeholder="Name"
+              v-model="dictionary.content.name"
+            />
           </div>
         </div>
         <div class="col-auto">
@@ -134,12 +145,12 @@
               />
               <div
                 v-if="isLastItem(item)"
-                class="btn btn-outline-secondary"
+                class="btn btn-outline-dark"
                 @click="addFlied()"
               >
                 <Plus />
               </div>
-              <div class="btn btn-outline-secondary" @click="removeFiled(item)">
+              <div class="btn btn-outline-dark" @click="removeFiled(item)">
                 <Dash />
               </div>
             </div>
@@ -328,7 +339,6 @@ import Trash from "./icons/Trash.vue";
 import Check from "./icons/Check.vue";
 import Cross from "./icons/X.vue";
 import Gear from "./icons/Gear.vue";
-//import Journal from "./icons/Journal.vue";
 import Play from "./icons/Play.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
@@ -355,6 +365,10 @@ var lastWordHash = "";
 
 if (dictionary.content.id === null || dictionary.content.id.length < 30) {
   console.log("Need ?id=UUID");
+  alert("Broken URL ಠ_ಠ");
+  setTimeout(function () {
+    window.location = "/";
+  }, 1500);
 } else {
   sendRequest();
 }
@@ -436,7 +450,7 @@ function sendUpdate() {
     method: "PUT",
     credentails: "same-origin",
     mode: "cors",
-    body: JSON.stringify(dictionary.content.words),
+    body: JSON.stringify(dictionary.content),
     headers: {
       Authorization: "Bearer " + getCookie("access_token"),
       "Content-Type": "application/json",
@@ -507,7 +521,7 @@ function sendBindRequest(funcToRun) {
 }
 
 function startUpdate() {
-  sha512(JSON.stringify(dictionary.content.words)).then((hash) => {
+  sha512(JSON.stringify(dictionary.content)).then((hash) => {
     if (hash == lastWordHash) {
       modal.title = "Canceled!";
       modal.body = "You have nothing changed!";
@@ -640,8 +654,8 @@ input:focus {
   background-color: unset;
   color: var(--text-primary-color);
 }
-.btn-outline-dark{
-  border-color: var(--text-primary-color);;
+.btn-outline-dark {
+  border-color: var(--text-primary-color);
   color: var(--text-primary-color);
 }
 .words {
@@ -691,6 +705,11 @@ input:focus {
 .group-item {
   margin-right: 0.5rem;
   margin-left: 0.3rem;
+}
+.title-form {
+  margin: auto auto 1.4rem;
+  text-align: center;
+  font-size: 1.4rem;
 }
 /* Triggered on boostrap md breakpoint */
 @media (max-width: 768px) {

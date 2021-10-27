@@ -1,7 +1,5 @@
 package de.mymiggi.voc.trainer;
 
-import java.util.List;
-
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -36,7 +34,6 @@ import de.mymiggi.voc.trainer.entity.Dictionary;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
 import de.mymiggi.voc.trainer.entity.db.SpecialWord;
-import de.mymiggi.voc.trainer.entity.db.Words;
 import de.mymiggi.voc.trainer.manager.BondedDictionaryManager;
 import de.mymiggi.voc.trainer.manager.DictionaryEntryManager;
 import de.mymiggi.voc.trainer.manager.SpecialWordManager;
@@ -133,9 +130,9 @@ public class DictionaryResource
 	@PUT
 	@Path("update/dictionary")
 	@RolesAllowed({ "user", "admin" })
-	public Response updateDictionary(@Context SecurityContext ctx, @QueryParam("id") String id, List<Words> newWords)
+	public Response updateDictionary(@Context SecurityContext ctx, @QueryParam("id") String id, Dictionary updatedDictionary)
 	{
-		return new UpdateDictionaryAction().run(id, getUser(ctx), newWords);
+		return new UpdateDictionaryAction().run(id, getUser(ctx), updatedDictionary);
 	}
 
 	@PUT
