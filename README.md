@@ -1,7 +1,7 @@
 # VocTrainer
 A amazing vocable trainer.
 
-![voc_trainer](https://cdn.discordapp.com/attachments/619826832157573130/897858942946910268/Screenshot_2021-10-13_at_16-50-01_Welcome_Voc-Trainer.png)
+![voc_trainer](https://cdn.discordapp.com/attachments/619826832157573130/902943246819393566/Voc_Preview_dark.png)
 
 ### This project includes:
 - frontend
