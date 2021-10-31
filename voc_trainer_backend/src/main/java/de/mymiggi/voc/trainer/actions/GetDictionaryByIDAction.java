@@ -7,10 +7,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
-import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.DictionaryAdvanced;
+import de.mymiggi.voc.trainer.entity.DictionarySimple;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.ShortMessageResponse;
-import de.mymiggi.voc.trainer.entity.WordsResponse;
+import de.mymiggi.voc.trainer.entity.WordsAdvanced;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 import de.mymiggi.voc.trainer.entity.db.Words;
 
@@ -27,17 +28,31 @@ public class GetDictionaryByIDAction
 			return Response.status(Status.BAD_REQUEST).entity(messageResponse).build();
 		}
 		List<Words> words = getWordsByDictionar(dictionary, wordsEntries);
-		List<WordsResponse> wordsResponses = new ArrayList<WordsResponse>();
+		List<WordsAdvanced> wordsResponses = new ArrayList<WordsAdvanced>();
 		words.forEach(item -> createWordResponse(user.getId(), wordsResponses, item));
-		Dictionary response = new Dictionary()
-			.setDictionaryEntry(dictionary)
-			.setWords(wordsResponses.stream().toArray(WordsResponse[]::new));
+		DictionarySimple response = (user.isAdmin() || dictionary.getUserID().equals(user.getId()))
+			? getAdvancedDictionary(dictionary, wordsResponses)
+			: getSimpleDictionary(dictionary, wordsResponses);
 		return Response.ok(response).build();
 	}
 
-	private void createWordResponse(String id, List<WordsResponse> wordsResponses, Words item)
+	private DictionarySimple getSimpleDictionary(DictionaryEntry dictionary, List<WordsAdvanced> wordsResponses)
 	{
-		WordsResponse toAdd = new WordsResponse(item);
+		return new DictionarySimple()
+			.setDictionaryEntry(dictionary)
+			.setAdvancedWords(wordsResponses.stream().toArray(WordsAdvanced[]::new));
+	}
+
+	private DictionaryAdvanced getAdvancedDictionary(DictionaryEntry dictionary, List<WordsAdvanced> wordsResponses)
+	{
+		return new DictionaryAdvanced()
+			.setDictionaryEntry(dictionary)
+			.setWords(wordsResponses.stream().toArray(WordsAdvanced[]::new));
+	}
+
+	private void createWordResponse(String id, List<WordsAdvanced> wordsResponses, Words item)
+	{
+		WordsAdvanced toAdd = new WordsAdvanced(item);
 		boolean isSpecialWord = DictionaryResource.SPECIAL_WORD_MANAGER.isSpecialWord(id, item);
 		toAdd.setSpecialWord(isSpecialWord);
 		wordsResponses.add(toAdd);
@@ -50,7 +65,9 @@ public class GetDictionaryByIDAction
 		{
 			if (temp.getDictionaryID() != null &&
 				temp.getDictionaryID().equals(dictionary.getID()) &&
+				temp.getEng() != null &&
 				!temp.getEng().isBlank() &&
+				temp.getGer() != null &&
 				!temp.getGer().isBlank())
 			{
 				words.add(temp);

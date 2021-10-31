@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import de.mymiggi.voc.trainer.entity.WordsAdvanced;
+
 @Entity
 public class Words
 {
@@ -27,6 +29,15 @@ public class Words
 		this.ger = ger;
 		this.eng = eng;
 		this.op = op;
+		this.dictionaryID = dictionaryID;
+	}
+
+	public Words(WordsAdvanced words, String dictionaryID)
+	{
+		ID = words.getID();
+		this.ger = words.getGer();
+		this.eng = words.getEng();
+		this.op = words.getOp();
 		this.dictionaryID = dictionaryID;
 	}
 

@@ -80,6 +80,10 @@ public class UniversalHibernateClient
 
 	public <T> boolean saveList(List<T> objectList)
 	{
+		if (objectList.size() == 0)
+		{
+			return false;
+		}
 		checkObject(objectList.get(0).getClass());
 		try
 		{
@@ -150,6 +154,10 @@ public class UniversalHibernateClient
 
 	public <T> boolean deleteList(List<T> objectList)
 	{
+		if (objectList.size() == 0)
+		{
+			return false;
+		}
 		checkObject(objectList.get(0).getClass());
 		try
 		{

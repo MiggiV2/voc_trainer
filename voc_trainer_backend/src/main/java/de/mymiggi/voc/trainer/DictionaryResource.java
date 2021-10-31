@@ -30,7 +30,8 @@ import de.mymiggi.voc.trainer.actions.SearchDictionaryAction;
 import de.mymiggi.voc.trainer.actions.UpdateDictionaryAction;
 import de.mymiggi.voc.trainer.actions.helper.BuildUserFromContext;
 import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
-import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.DictionaryAdvanced;
+import de.mymiggi.voc.trainer.entity.DictionarySimple;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.SearchRequest;
 import de.mymiggi.voc.trainer.entity.db.SpecialWord;
@@ -130,7 +131,7 @@ public class DictionaryResource
 	@PUT
 	@Path("update/dictionary")
 	@RolesAllowed({ "user", "admin" })
-	public Response updateDictionary(@Context SecurityContext ctx, @QueryParam("id") String id, Dictionary updatedDictionary)
+	public Response updateDictionary(@Context SecurityContext ctx, @QueryParam("id") String id, DictionaryAdvanced updatedDictionary)
 	{
 		return new UpdateDictionaryAction().run(id, getUser(ctx), updatedDictionary);
 	}
@@ -138,7 +139,7 @@ public class DictionaryResource
 	@PUT
 	@Path("save")
 	@RolesAllowed({ "user", "admin" })
-	public Response save(@Context SecurityContext ctx, Dictionary dictionary)
+	public Response save(@Context SecurityContext ctx, DictionaryAdvanced dictionary)
 	{
 		return new SaveDictionaryAction().run(dictionary, getUser(ctx));
 	}
@@ -183,7 +184,7 @@ public class DictionaryResource
 	@DELETE
 	@Path("delete")
 	@RolesAllowed({ "user", "admin" })
-	public Response delete(Dictionary dictionary, @Context SecurityContext ctx)
+	public Response delete(DictionarySimple dictionary, @Context SecurityContext ctx)
 	{
 		return new DeleteDictionaryAction().run(dictionary, getUser(ctx));
 	}

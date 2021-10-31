@@ -10,7 +10,7 @@ public class Dictionary
 	private String name;
 	private String id;
 	private DiscordUser user;
-	private WordsResponse[] words;
+	private WordsSimple[] words;
 
 	public String getName()
 	{
@@ -23,32 +23,32 @@ public class Dictionary
 		return this;
 	}
 
-	public Words[] getWords()
+	public WordsSimple[] getWords()
 	{
 		return words;
 	}
 
 	public Dictionary setWordList(List<Words> words, boolean AreSpecialWords)
 	{
-		this.words = new WordsResponse[words.size()];
+		this.words = new WordsAdvanced[words.size()];
 		for (int i = 0; i < words.size(); i++)
 		{
-			this.words[i] = new WordsResponse(words.get(i)).setSpecialWord(AreSpecialWords);
+			this.words[i] = new WordsAdvanced(words.get(i)).setSpecialWord(AreSpecialWords);
 		}
 		return this;
 	}
 
 	public Dictionary setWordList(List<Words> words)
 	{
-		this.words = new WordsResponse[words.size()];
+		this.words = new WordsAdvanced[words.size()];
 		for (int i = 0; i < words.size(); i++)
 		{
-			this.words[i] = new WordsResponse(words.get(i));
+			this.words[i] = new WordsAdvanced(words.get(i));
 		}
 		return this;
 	}
 
-	public Dictionary setWords(WordsResponse[] words)
+	public Dictionary setWords(WordsAdvanced[] words)
 	{
 		this.words = words;
 		return this;
@@ -58,7 +58,7 @@ public class Dictionary
 	{
 		this.name = dictionaryEntry.getName();
 		this.setId(dictionaryEntry.getID());
-		this.setUser(new DiscordUser()
+		this.setUser(new DiscordUser(id)
 			.setAvatar(dictionaryEntry.getUserAvater())
 			.setId(dictionaryEntry.getUserID())
 			.setName(dictionaryEntry.getUserName()));

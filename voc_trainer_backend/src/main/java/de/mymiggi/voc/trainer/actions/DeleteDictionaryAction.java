@@ -4,14 +4,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
-import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.DictionarySimple;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.ShortMessageResponse;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 
 public class DeleteDictionaryAction
 {
-	public Response run(Dictionary dictionary, DiscordUser user)
+	public Response run(DictionarySimple dictionary, DiscordUser user)
 	{
 		if (dictionary == null || dictionary.getId() == null)
 		{

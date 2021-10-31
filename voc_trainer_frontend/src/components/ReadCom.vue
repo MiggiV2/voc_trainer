@@ -26,8 +26,7 @@
             Train<Play style="height: 25px; width: 25px" />
           </div>
         </div>
-        <div v-if="show.edit" class="col-1 desktop">
-        </div>
+        <div v-if="show.edit" class="col-1 desktop"></div>
         <div class="col">
           <div v-if="!show.edit">
             <h3 class="title">
@@ -120,7 +119,7 @@
         v-for="(item, index) in dictionary.content.words"
         :key="index"
       >
-        <div v-if="item.dictionaryID != null">
+        <div v-if="item.eng != null && item.ger != null">
           <div v-if="show.edit">
             <div class="input-group">
               <input
@@ -374,12 +373,17 @@ if (dictionary.content.id === null || dictionary.content.id.length < 30) {
 }
 
 function sendRequest() {
+  var headerSimple = {
+    "Content-Type": "application/json",
+  };
+  var headerAdvanced = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + getCookie("access_token"),
+  };
   fetch(HOST + "api/get/dictionary?id=" + dictionary.content.id, {
     credentails: "same-origin",
     mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getCookie("access_token") ? headerAdvanced : headerSimple,
   })
     .then((response) => {
       if (response.ok || response.status === 400) {
@@ -544,7 +548,13 @@ function openTainer() {
 }
 
 function removeFiled(word) {
-  word.dictionaryID = null;
+  if (typeof word.id === "undefined") {
+    dictionary.content.words.pop();
+  } else {
+    word.eng = null;
+    word.ger = null;
+    word.op = null;
+  }
 }
 
 function isLastItem(item) {
@@ -556,7 +566,7 @@ function getShownWords() {
   var shownWords = [];
   for (var i = 0; i < dictionary.content.words.length; i++) {
     var currentWord = dictionary.content.words[i];
-    if (currentWord.dictionaryID != null) {
+    if (!currentWord.hidden) {
       shownWords.push(currentWord);
     }
   }
@@ -568,7 +578,6 @@ function addFlied() {
     eng: "",
     ger: "",
     op: "",
-    dictionaryID: dictionary.content.id,
   });
 }
 

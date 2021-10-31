@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import de.mymiggi.voc.trainer.DictionaryResource;
-import de.mymiggi.voc.trainer.entity.Dictionary;
+import de.mymiggi.voc.trainer.entity.DictionaryAdvanced;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 import de.mymiggi.voc.trainer.entity.db.SpecialWord;
@@ -20,11 +20,11 @@ public class GetSpecialWordAction
 	public Response run(DiscordUser user)
 	{
 		List<SpecialWord> ids = DictionaryResource.SPECIAL_WORD_MANAGER.getByUser(user);
-		List<Dictionary> dictionarys = new ArrayList<Dictionary>();
+		List<DictionaryAdvanced> dictionarys = new ArrayList<DictionaryAdvanced>();
 		Map<DictionaryEntry, List<Words>> dictionaryMap = new HashMap<DictionaryEntry, List<Words>>();
 		ids.forEach(item -> addItem(dictionaryMap, item));
 		dictionaryMap.forEach((dictionaryEntry, wordList) -> {
-			dictionarys.add(new Dictionary().setDictionaryEntry(dictionaryEntry).setWordList(wordList, true));
+			dictionarys.add(new DictionaryAdvanced().setDictionaryEntry(dictionaryEntry).setWordList(wordList, true));
 		});
 		return dictionarys.isEmpty() ? Response.status(Status.NO_CONTENT).build() : Response.ok(dictionarys).build();
 	}
