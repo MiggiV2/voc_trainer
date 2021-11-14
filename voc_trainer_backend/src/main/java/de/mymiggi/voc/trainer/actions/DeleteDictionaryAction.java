@@ -3,7 +3,10 @@ package de.mymiggi.voc.trainer.actions;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.jboss.logging.Logger;
+
 import de.mymiggi.voc.trainer.DictionaryResource;
+import de.mymiggi.voc.trainer.actions.helper.CleanDataBaseAction;
 import de.mymiggi.voc.trainer.entity.DictionarySimple;
 import de.mymiggi.voc.trainer.entity.DiscordUser;
 import de.mymiggi.voc.trainer.entity.ShortMessageResponse;
@@ -11,6 +14,8 @@ import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 
 public class DeleteDictionaryAction
 {
+	private static final Logger LOGGER = Logger.getLogger(DeleteDictionaryAction.class.getName());
+
 	public Response run(DictionarySimple dictionary, DiscordUser user)
 	{
 		if (dictionary == null || dictionary.getId() == null)
@@ -30,8 +35,22 @@ public class DeleteDictionaryAction
 		}
 		ShortMessageResponse messageResponse = new ShortMessageResponse("Failed to delete dictionary!");
 		boolean succes = DictionaryResource.DICTIONARY_MANAGER.delete(dictionaryFromDB);
+		cleanDB();
+		DictionaryResource.WORDS_MANAGER.syncList();
 		return (succes)
 			? Response.ok().build()
 			: Response.status(Status.CONFLICT).entity(messageResponse).build();
+	}
+
+	private void cleanDB()
+	{
+		try
+		{
+			new CleanDataBaseAction().run();
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Failed to clean database!", e);
+		}
 	}
 }

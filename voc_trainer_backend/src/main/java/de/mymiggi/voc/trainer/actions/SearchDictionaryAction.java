@@ -54,7 +54,8 @@ public class SearchDictionaryAction
 			}
 			hitMap.put(current, hits);
 		}
-		return Response.ok(getSortedList(hitMap)).build();
+		List<DictionaryEntry> result = getSortedList(hitMap);
+		return result.isEmpty() ? Response.noContent().build() : Response.ok(result).build();
 	}
 
 	private List<DictionaryEntry> getSortedList(Map<DictionaryEntry, Integer> hitMap)

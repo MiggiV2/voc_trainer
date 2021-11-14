@@ -11,11 +11,11 @@ import de.mymiggi.voc.trainer.entity.db.DictionaryEntry;
 
 public class GetPreviewAction
 {
-	private static final int minItems = 5;
-	
+	private static final int minItems = 8;
+
 	public Response run()
 	{
-		List<DictionaryEntry> allEntrys = DictionaryResource.DICTIONARY_MANAGER.getEntrys();
+		List<DictionaryEntry> allEntrys = sortList(DictionaryResource.DICTIONARY_MANAGER.getEntrys());
 		List<DictionaryEntry> entrys = new ArrayList<DictionaryEntry>();
 		if (allEntrys.size() < minItems)
 		{
@@ -28,9 +28,9 @@ public class GetPreviewAction
 				entrys.add(allEntrys.get(i));
 			}
 		}
-		return Response.ok(sortList(entrys)).build();
+		return Response.ok(entrys).build();
 	}
-	
+
 	private List<DictionaryEntry> sortList(List<DictionaryEntry> entrys)
 	{
 		List<DictionaryEntry> response = new ArrayList<DictionaryEntry>();

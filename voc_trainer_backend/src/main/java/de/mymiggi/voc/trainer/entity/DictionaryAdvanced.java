@@ -41,6 +41,11 @@ public class DictionaryAdvanced extends DictionarySimple
 		return this;
 	}
 
+	public DictionarySimple setWordList(List<Words> words)
+	{
+		return setWordList(words, false);
+	}
+
 	public DictionaryAdvanced setWords(WordsAdvanced[] words)
 	{
 		this.words = words;

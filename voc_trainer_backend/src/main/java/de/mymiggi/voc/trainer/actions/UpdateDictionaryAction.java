@@ -41,14 +41,13 @@ public class UpdateDictionaryAction
 			entry.setName(updatedDictionary.getName());
 			DictionaryResource.DICTIONARY_MANAGER.save(entry);
 		}
-		List<Words> listToSave = new ArrayList<Words>();
-		List<Words> dictionary = DictionaryResource.WORDS_MANAGER.getWordsByDictionary(entry);
-		Map<Integer, Words> idMap = new HashMap<Integer, Words>();
-		updateWords(id, updatedDictionary, listToSave, dictionary, idMap);
+		List<Words> dictionaryFromDB = DictionaryResource.WORDS_MANAGER.getWordsByDictionary(entry);
+		List<Words> listToSave = updateWords(updatedDictionary, dictionaryFromDB);
 		boolean failed = !DictionaryResource.WORDS_MANAGER.saveList(listToSave);
-		ShortMessageResponse messsage = new ShortMessageResponse("Failed to update!");
+		ShortMessageResponse messsage = new ShortMessageResponse("Failed to update! Problem in database!");
 		if (failed)
 		{
+			System.err.println("Words:" + listToSave.size());
 			return Response.status(Status.CONFLICT).entity(messsage).build();
 		}
 		else
@@ -70,23 +69,26 @@ public class UpdateDictionaryAction
 		}
 	}
 
-	private void updateWords(String id, DictionaryAdvanced updatedDictionary, List<Words> listToSave, List<Words> dictionary, Map<Integer, Words> idMap)
+	private List<Words> updateWords(DictionaryAdvanced updatedDictionary, List<Words> wordsFromDB)
 	{
-		for (Words temp : dictionary)
+		Map<Integer, Words> knownWords = new HashMap<Integer, Words>();
+		List<Words> listToSave = new ArrayList<Words>();
+		for (Words temp : wordsFromDB)
 		{
-			idMap.put(temp.getID(), temp);
+			knownWords.put(temp.getID(), temp);
 		}
 		for (WordsAdvanced temp : updatedDictionary.getWords())
 		{
 			if (temp != null)
 			{
 				listToSave.add(
-					idMap.containsKey(temp.getID())
-						? update(idMap.get(temp.getID()), temp, updatedDictionary.getId())
+					knownWords.containsKey(temp.getID())
+						? update(knownWords.get(temp.getID()), temp, updatedDictionary.getId())
 						: new Words(temp, updatedDictionary.getId()));
 
 			}
 		}
+		return listToSave;
 	}
 
 	private Words update(Words oldWord, WordsAdvanced newWord, String dictionaryID)
