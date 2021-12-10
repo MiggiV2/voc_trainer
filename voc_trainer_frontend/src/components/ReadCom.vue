@@ -12,7 +12,7 @@
             data-bs-toggle="modal"
             data-bs-target="#trainModal"
           >
-            <Play style="height: 25px; width: 25px" />
+            <i class="bi bi-play-fill" />
           </div>
           <div
             class="desktop train-link btn btn-outline-dark"
@@ -23,7 +23,7 @@
             data-bs-toggle="modal"
             data-bs-target="#trainModal"
           >
-            Train<Play style="height: 25px; width: 25px" />
+            <a>Train</a><i class="bi bi-play-fill" />
           </div>
         </div>
         <div v-if="show.edit" class="col-1 desktop"></div>
@@ -63,7 +63,7 @@
                   aria-expanded="false"
                   title="Options"
                 >
-                  <Gear />
+                  <i class="bi bi-gear"></i>
                 </div>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
@@ -73,7 +73,7 @@
                       data-bs-target="#deleteModal"
                       title="Delete"
                     >
-                      <Trash />
+                      <i class="bi bi-trash-fill"></i>
                     </button>
                   </li>
                   <li>
@@ -82,7 +82,7 @@
                       @click="edit()"
                       title="Update"
                     >
-                      <Pencil />
+                      <i class="bi bi-pencil-square"></i>
                     </button>
                   </li>
                 </ul>
@@ -92,7 +92,7 @@
                   class="btn btn-danger btn-sm update-button"
                   @click="cancel()"
                 >
-                  <Cross />
+                  <i class="bi bi-x"></i>
                 </button>
                 <button
                   class="btn btn-success btn-sm update-button"
@@ -100,7 +100,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#updatedModal"
                 >
-                  <Check />
+                  <i class="bi bi-check-lg"></i>
                 </button>
               </div>
             </div>
@@ -147,10 +147,10 @@
                 class="btn btn-outline-dark"
                 @click="addFlied()"
               >
-                <Plus />
+                <i class="bi bi-plus-lg"></i>
               </div>
               <div class="btn btn-outline-dark" @click="removeFiled(item)">
-                <Dash />
+                <i class="bi bi-dash"></i>
               </div>
             </div>
           </div>
@@ -330,15 +330,6 @@ import { HOST, sha512 } from "../tools/auth";
 import { getAvatarURLFromUser, theme } from "../tools/user";
 import { getCookie } from "../tools/cookie";
 import Toast from "./SuccessToast.vue";
-
-import Plus from "./icons/Plus.vue";
-import Dash from "./icons/Dash.vue";
-import Pencil from "./icons/Pencil.vue";
-import Trash from "./icons/Trash.vue";
-import Check from "./icons/Check.vue";
-import Cross from "./icons/X.vue";
-import Gear from "./icons/Gear.vue";
-import Play from "./icons/Play.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 var dictionary = reactive({
@@ -714,6 +705,9 @@ input:focus {
 .group-item {
   margin-right: 0.5rem;
   margin-left: 0.3rem;
+}
+.bi-play-fill {
+  font-size: 24px;
 }
 .title-form {
   margin: auto auto 1.4rem;

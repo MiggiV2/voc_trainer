@@ -38,7 +38,7 @@
         <div class="box">
           <h3>How to create my dictionary?</h3>
           <hr />
-          <p>Click <a href="/add">HERE</a> or in the header <Add /></p>
+          <p>Click <a href="/add">HERE</a> or in the header <i class="bi bi-plus-circle"></i></p>
           <p>Then enter your words.</p>
         </div>
       </div>
@@ -55,8 +55,6 @@
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
-
-import Add from "./icons/Add.vue";
 
 var title = reactive({
   content: "Your dictionarys...",

@@ -1,40 +1,35 @@
 <template>
-  <!--:class="{ 'dark-theme': theme == 'dark' }"-->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container row">
       <div class="col-auto">
         <a href="/" title="Home">
-          <HouseOutline
-            width="21"
-            height="21"
-            v-if="theme.mode == 'dark-mode'"
-          />
-          <House v-else />
+          <i class="bi bi-house-door" v-if="theme.mode == 'dark-mode'" width="20" height="20"/>
+          <i v-else class="bi bi-house-door-fill" width="20" height="20"></i>
         </a>
       </div>
       <div v-if="getCookie('access_token')" class="col-auto">
         <a href="/train" title="Train a dictionary">
-          <Journal />
+          <i class="bi bi-journal-bookmark-fill"></i>
         </a>
       </div>
       <div v-if="getCookie('access_token')" class="col-auto">
         <a href="/add" title="Add new dictionary">
-          <AddOutline width="20" height="20" v-if="theme.mode == 'dark-mode'" />
-          <Add v-else />
+          <i class="bi bi-plus-circle" v-if="theme.mode == 'dark-mode'" />
+          <i class="bi bi-plus-circle-fill" v-else />
         </a>
       </div>
       <div v-else class="col-auto">
         <a v-if="theme.mode == 'dark-mode'" @click="setLightMode">
-          <Sun />
+          <i class="bi bi-brightness-high-fill"></i>
         </a>
         <a v-else @click="setDarkMode">
-          <Moon />
+          <i class="bi bi-moon-fill"></i>
         </a>
       </div>
       <div class="col"></div>
       <div class="col-auto">
         <a v-if="!getCookie('access_token')" @click="openLogin()">
-          Login <Login />
+          Login <i class="bi bi-box-arrow-in-right"></i>
         </a>
         <div v-else>
           <a
@@ -51,13 +46,13 @@
               class="avatar"
               :src="appUser.avatarurl"
             />
-            <Person v-else />
+            <i class="bi bi-person-circle" v-else />
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
               <a class="dropdown-item" href="/train" title="Train page">
-                Train <Journal class="icon-right" width="17" height="17"
-              /></a>
+                Train <i class="bi bi-journal-bookmark-fill icon-right"></i>
+              </a>
             </li>
             <li>
               <a
@@ -65,7 +60,7 @@
                 href="/my-dictionarys"
                 title="Show your dictionarys"
               >
-                Yours <Book class="icon-right" />
+                Yours <i class="bi bi-book icon-right"></i>
               </a>
             </li>
             <li>
@@ -74,23 +69,23 @@
                 href="/saved"
                 title="Show your marked words"
               >
-                Saved <BookmarkCheckFill class="icon-right" />
+                Saved <i class="bi bi-bookmark-check icon-right"></i>
               </a>
             </li>
             <li v-if="theme.mode == 'dark-mode'">
               <a class="dropdown-item" @click="setLightMode">
-                Lightmode <Sun class="icon-right" />
+                Lightmode <i class="bi bi-brightness-high-fill icon-right"></i>
               </a>
             </li>
             <li v-else>
               <a class="dropdown-item" @click="setDarkMode">
-                Darkmode <Moon class="icon-right" />
+                Darkmode <i class="bi bi-moon-fill icon-right"></i>
               </a>
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
               <a @click="logout()" class="dropdown-item text-danger" href="#">
-                Logout <Logout class="icon-right" />
+                Logout <i class="bi bi-box-arrow-right icon-right"></i>
               </a>
             </li>
           </ul>
@@ -108,19 +103,6 @@ import { loadUser, getAvatarURL } from "../tools/user";
 import { getCookie, setCookie, setCookieSeasson } from "../tools/cookie";
 import { v4 as uuidv4 } from "uuid";
 import { reactive } from "vue";
-
-import House from "./icons/House.vue";
-import HouseOutline from "./icons/HouseOutline.vue";
-import Add from "./icons/Add.vue";
-import AddOutline from "./icons/AddOutline.vue";
-import Journal from "./icons/Journal.vue";
-import Login from "./icons/Login.vue";
-import Logout from "./icons/Logout.vue";
-import Person from "./icons/Person.vue";
-import Book from "./icons/Book.vue";
-import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue";
-import Moon from "./icons/Moon.vue";
-import Sun from "./icons/Sun.vue";
 
 var appUser = reactive({
   username: String,
@@ -214,7 +196,7 @@ a:visited {
   color: unset;
   text-decoration: none;
 }
-li:hover{
+li:hover {
   color: var(--accent-color-2);
 }
 .avatar {

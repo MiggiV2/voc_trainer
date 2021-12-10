@@ -1,5 +1,5 @@
 <template>
-<!--Can't find your last dictionary-->
+  <!--Can't find your last dictionary-->
   <div class="wrapped">
     <div class="box" v-if="!getCookie('access_token') && !status.showTainer">
       <h1 class="text-danger">Please login first!</h1>
@@ -7,19 +7,21 @@
     <div class="box" v-if="!status.showTainer">
       <h2>Lets start!</h2>
       <hr />
-      <h4>{{status.message}}</h4>
+      <h4>{{ status.message }}</h4>
       <p>
         Status:
         <a v-if="status.bond == null" class="spinner-border"></a>
-        <a v-else-if="status.bond"><Check class="text-success" /></a>
+        <a v-else-if="status.bond"
+          ><i class="bi bi-check-lg text-success"></i
+        ></a>
         <a
           v-else
           class="trigger"
           data-bs-toggle="modal"
           data-bs-target="#helpModal"
         >
-          <Exclamation class="text-danger" />
-           Help!
+          <i class="bi bi-exclamation-diamond-fill text-danger"></i>
+          Help!
         </a>
       </p>
       <div v-if="status.bond">
@@ -50,9 +52,9 @@
           ></button>
         </div>
         <div class="modal-body">
-          <p>In your left corner, click <House /></p>
+          <p>In your left corner, click <i class="bi bi-house-door"></i></p>
           <p>Then find one dictionary</p>
-          <p>Right, beside the dictionary title click <Journal /></p>
+          <p>Right, beside the dictionary title click <i class="bi bi-journal-bookmark-fill"></i></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-bs-dismiss="modal">
@@ -69,18 +71,13 @@ import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
 
-import Check from "./icons/Check.vue";
-import Exclamation from "./icons/Exclamation.vue";
-import House from "./icons/House.vue";
-import Journal from "./icons/Journal.vue";
-
 var urlParams = new URLSearchParams(window.location.search);
 
 var status = reactive({
   bond: null,
   dictionaryID: "help",
   showTainer: urlParams.has("id"),
-  message: "Searching your last dictionary..."
+  message: "Searching your last dictionary...",
 });
 
 var button = reactive({
@@ -107,12 +104,12 @@ function sendRequest() {
     .then((response) => {
       if (response.status === 200) {
         status.bond = true;
-        status.message = 'Found your last dictionary.';
+        status.message = "Found your last dictionary.";
         startTimer(2);
         return response.json();
       } else if (response.status === 204) {
         status.bond = false;
-        status.message = 'No last dictionary found.';
+        status.message = "No last dictionary found.";
       }
     })
     .then((response) => {
@@ -122,16 +119,14 @@ function sendRequest() {
     });
 }
 
-function startTimer(time) { 
+function startTimer(time) {
   setTimeout(function () {
     button.content = "Start in " + time + "!";
-    if(time <= 0)
-    {
+    if (time <= 0) {
       startTainer();
-    }
-    else{
+    } else {
       startTimer(time - 1);
-    }    
+    }
   }, 1000);
 }
 

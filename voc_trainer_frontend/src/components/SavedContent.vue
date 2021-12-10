@@ -37,7 +37,10 @@
         <div class="box">
           <h3>How to save words?</h3>
           <hr />
-          <p>Go to <a href="/train">train</a> and click <Bookmark /></p>
+          <p>
+            Go to <a href="/train">train</a> and click
+            <i class="bi bi-bookmark"></i>
+          </p>
         </div>
       </div>
     </div>
@@ -93,7 +96,7 @@
                   class="btn btn-outline-danger"
                   @click="removeSpecialWord(item)"
                 >
-                  <Trash />
+                  <i class="bi bi-trash-fill"></i>
                 </div>
               </div>
               <div class="input-group">
@@ -122,9 +125,6 @@
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
-
-import Bookmark from "./icons/Bookmark.vue";
-import Trash from "./icons/Trash.vue";
 
 var title = reactive({
   content: "Your saved words...",

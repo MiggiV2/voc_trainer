@@ -13,7 +13,7 @@
               !dictionary.currentWord.specialWord && getCookie('access_token')
             "
           >
-            <Bookmark />
+            <i class="bi bi-bookmark"></i>
           </button>
           <button
             title="Save this word"
@@ -21,14 +21,14 @@
             @click="removeSpecialWord()"
             v-else-if="getCookie('access_token')"
           >
-            <BookmarkCheckFill />
+            <i class="bi bi-bookmark-check-fill"></i>
           </button>
           <button
             class="btn btn-outline-dark top-buttons show-button"
             data-bs-toggle="modal"
             data-bs-target="#helpWordModal"
           >
-            <Eye />
+            <i class="bi bi-eye"></i>
           </button>
         </div>
         <div class="mobile col"></div>
@@ -38,14 +38,14 @@
             data-bs-toggle="modal"
             data-bs-target="#settingsdModal"
           >
-            <Gear />
+            <i class="bi bi-gear"></i>
           </button>
           <button
             title="Skip"
             @click="setRandomWord()"
             class="btn btn-danger top-buttons"
           >
-            <Arrow_Right_Circle />
+            <i class="bi bi-arrow-right-circle"></i>
           </button>
         </div>
         <div class="col-md">
@@ -68,14 +68,14 @@
               data-bs-target="#settingsdModal"
               @click="setCheck()"
             >
-              <Gear />
+              <i class="bi bi-gear"></i>
             </button>
             <button
               title="Skip"
               @click="setRandomWord()"
               class="btn btn-danger top-buttons"
             >
-              <Arrow_Right_Circle />
+              <i class="bi bi-arrow-right-circle"></i>
             </button>
           </div>
         </div>
@@ -97,13 +97,13 @@
         <div v-if="anwser.isCorrect" class="feedback correct">
           <h3>
             Correct!
-            <EmojiWink />
+            <i class="bi bi-emoji-wink"></i>
           </h3>
         </div>
         <div v-else class="feedback wrong">
           <h3>
             Wrong
-            <EmojiFrown />
+            <i class="bi bi-emoji-frown"></i>
           </h3>
         </div>
       </div>
@@ -211,14 +211,6 @@
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
-
-import Bookmark from "./icons/Bookmark.vue";
-import BookmarkCheckFill from "./icons/BookmarkCheckFill.vue";
-import Arrow_Right_Circle from "./icons/Arrow_Right_Circle.vue";
-import EmojiFrown from "./icons/EmojiFrown.vue";
-import EmojiWink from "./icons/EmojiWink.vue";
-import Eye from "./icons/Eye.vue";
-import Gear from "./icons/Gear.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 
@@ -476,8 +468,8 @@ form {
   margin-bottom: 2rem;
   margin-top: 2rem;
 }
-.btn-outline-dark{
-  border-color: var(--text-primary-color);;
+.btn-outline-dark {
+  border-color: var(--text-primary-color);
   color: var(--text-primary-color);
 }
 input:focus {

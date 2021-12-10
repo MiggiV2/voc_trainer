@@ -4,7 +4,7 @@
     <div class="input-group">
       <input autofocus type="text" class="form-control" placeholder="Search term" v-model="request.query" />
       <button type="submit" class="btn btn-primary">
-        <Search />
+        <i class="bi bi-search"></i>
       </button>
     </div>
     </form>
@@ -13,8 +13,6 @@
 
 <script setup>
 import { reactive } from "vue";
-
-import Search from "./icons/Search.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 var request = reactive({

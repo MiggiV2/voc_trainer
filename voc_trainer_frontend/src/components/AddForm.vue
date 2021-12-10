@@ -40,10 +40,10 @@
                 class="btn btn-primary"
                 @click="addFlied()"
               >
-                <Plus />
+                <i class="bi bi-plus-lg"></i>
               </div>
               <div v-else class="btn btn-danger" @click="removeFiled(index)">
-                <Dash />
+                <i class="bi bi-dash"></i>
               </div>
             </div>
           </div>
@@ -54,11 +54,11 @@
           class="btn btn-primary submit disabled"
         >
           Save
-          <SdCard />
+          <i class="bi bi-sd-card-fill"></i>
         </button>
         <button v-else type="submit" class="btn btn-primary submit">
           {{ button.content }}
-          <SdCard />
+          <i class="bi bi-sd-card-fill"></i>
         </button>
       </form>
     </div>
@@ -75,9 +75,6 @@ import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
 import Toast from "./SuccessToast.vue";
-import Plus from "./icons/Plus.vue";
-import Dash from "./icons/Dash.vue";
-import SdCard from "./icons/SdCard.vue";
 
 var dictionary = reactive({
   name: null,

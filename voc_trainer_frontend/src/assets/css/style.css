@@ -65,3 +65,7 @@ body {
 .dropdown-item{
     color: unset;
 }
+
+.bi {
+    font-size: 20px;
+}

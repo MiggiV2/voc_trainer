@@ -1,4 +1,4 @@
-# voc-trainer-frontend
+# voc_trainer_frontend-2
 
 ## Project setup
 ```
