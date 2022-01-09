@@ -8,7 +8,7 @@ export function getAuthURL() {
 
 export function getURLHashParams() {
     var hash = window.location.hash.substr(1);
-    var result = hash.split('&').reduce(function (res, item) {
+    var result = hash.split('&').reduce(function(res, item) {
         var parts = item.split('=');
         res[parts[0]] = parts[1];
         return res;
@@ -22,4 +22,4 @@ export function sha512(str) {
     });
 }
 
-export var HOST = "http://localhost:8888/";
+export var HOST = "https://apis.mymiggi.de/voc-trainer/";
