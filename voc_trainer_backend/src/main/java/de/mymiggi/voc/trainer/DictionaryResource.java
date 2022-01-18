@@ -39,10 +39,13 @@ import de.mymiggi.voc.trainer.manager.BondedDictionaryManager;
 import de.mymiggi.voc.trainer.manager.DictionaryEntryManager;
 import de.mymiggi.voc.trainer.manager.SpecialWordManager;
 import de.mymiggi.voc.trainer.manager.WordsManager;
+import io.quarkus.runtime.Quarkus;
+import io.quarkus.runtime.annotations.QuarkusMain;
 
-@Path("/api")
+@Path("voc-trainer/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@QuarkusMain
 public class DictionaryResource
 {
 	public static final UniversalHibernateClient HIBERNATE_CLIENT = new UniversalHibernateClient();
@@ -51,9 +54,10 @@ public class DictionaryResource
 	public static final BondedDictionaryManager BONDED_DICTIONARY_MANAGER = new BondedDictionaryManager();
 	public static final SpecialWordManager SPECIAL_WORD_MANAGER = new SpecialWordManager();
 
-	public DictionaryResource()
+	public static void main(String... args)
 	{
 		new CleanDataBaseAction().run();
+		Quarkus.run(args);
 	}
 
 	@POST
