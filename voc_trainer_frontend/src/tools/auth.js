@@ -2,7 +2,7 @@ export function getAuthURL() {
     return "https://discord.com/api/oauth2/authorize" +
         "?client_id=888091850467065936" +
         "&response_type=token" +
-        "&redirect_uri=http%3A%2F%2Flocalhoste%3A3000%2Fcallback" +
+        "&redirect_uri=http%3A%2F%2Flocalhost%2Fcallback" +
         "&scope=identify";
 }
 
@@ -22,4 +22,4 @@ export function sha512(str) {
     });
 }
 
-export var HOST = "https://apis.mymiggi.de/voc-trainer/";
+export var HOST = "http://localhost:8080/voc-trainer/";

@@ -1,6 +1,6 @@
 {
-  "name": "voc_trainer_frontend-2",
-  "version": "1.0.5-new",
+  "name": "voc_trainer_frontend",
+  "version": "1.0.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 3000",
