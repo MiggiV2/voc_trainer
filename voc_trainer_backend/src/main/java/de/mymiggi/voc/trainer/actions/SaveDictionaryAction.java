@@ -35,7 +35,7 @@ public class SaveDictionaryAction
 		DictionaryEntry dictionaryEntry = new DictionaryEntry(dictionary.getName());
 		dictionaryEntry.setUser(discordUser);
 		words.stream()
-			.filter(word -> word != null && word.getEng() != null && word.getGer() != null && !word.getEng().isBlank() && !word.getGer().isBlank())
+			.filter(word -> isValidWord(word))
 			.forEach(word -> {
 				WordsAdvanced toAdd = new WordsAdvanced()
 					.setEng(word.getEng())
@@ -59,5 +59,11 @@ public class SaveDictionaryAction
 		filtered.forEach(temp -> listToSave.add(new Words(temp, dictionaryEntry.getID())));
 		DictionaryResource.WORDS_MANAGER.saveList(listToSave);
 		DictionaryResource.DICTIONARY_MANAGER.save(dictionaryEntry);
+	}
+
+	private boolean isValidWord(WordsAdvanced word)
+	{
+		return word != null && word.getEng() != null && word.getGer() != null
+			&& !word.getEng().isBlank() && !word.getGer().isBlank();
 	}
 }
