@@ -35,7 +35,7 @@ public class SaveDictionaryAction
 		DictionaryEntry dictionaryEntry = new DictionaryEntry(dictionary.getName());
 		dictionaryEntry.setUser(discordUser);
 		words.stream()
-			.filter(word -> !word.getEng().isBlank() && !word.getGer().isBlank())
+			.filter(word -> word != null && word.getEng() != null && word.getGer() != null && !word.getEng().isBlank() && !word.getGer().isBlank())
 			.forEach(word -> {
 				WordsAdvanced toAdd = new WordsAdvanced()
 					.setEng(word.getEng())
