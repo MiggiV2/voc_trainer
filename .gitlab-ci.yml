@@ -17,19 +17,19 @@ before_script:
 build-job:
   stage: build
   script:
-    - cd voc_trainer_auth
+    - cd auth
     - ./mvnw clean package -DskipTests
-    - cd ../voc_trainer_backend
+    - cd ../api
     - ./mvnw clean package -DskipTests
 
 deploy-job:
   stage: deploy
   script:
-    - cd voc_trainer_auth/target/quarkus-app/
+    - cd auth/target/quarkus-app/
     - docker build ../.. -t $ROOT_IMAGE/auth
-    - cd ../../../voc_trainer_backend/target/quarkus-app/
+    - cd ../../../api/target/quarkus-app/
     - docker build ../.. -t $ROOT_IMAGE/api
-    - cd ../../../voc_trainer_auth/
+    - cd ../../../gui/
     - docker build -t $ROOT_IMAGE/gui
     - docker push $ROOT_IMAGE/auth
     - docker push $ROOT_IMAGE/api
