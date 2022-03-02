@@ -21,6 +21,7 @@ build-job:
     - ./mvnw clean package -DskipTests
     - cd ../api
     - ./mvnw clean package -DskipTests
+    - cd target/quarkus-app/
     - docker build ../.. -t $ROOT_IMAGE/api
     - cd ../../../api/target/quarkus-app/
     - docker build ../.. -t $ROOT_IMAGE/auth
