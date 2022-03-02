@@ -7,14 +7,22 @@ import javax.persistence.Entity;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.jboss.logging.Logger;
+
+import de.mymiggi.voc.trainer.config.DBConfig;
 
 public class UniversalHibernateClient
 {
-	private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-	private Session session = sessionFactory.openSession();
+	private Session session;
+	private SessionFactory sessionFactory;
 	private static final Logger LOGGER = Logger.getLogger(UniversalHibernateClient.class.getName());
+
+	public UniversalHibernateClient()
+	{
+		DBConfig dbConfig = new DBConfig();
+		sessionFactory = dbConfig.buildConfig().configure().buildSessionFactory();
+		session = sessionFactory.openSession();
+	}
 
 	public <T> List<T> getList(Class<T> objectClass)
 	{

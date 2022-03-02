@@ -8,7 +8,7 @@ services:
 
   database:
     image: 'postgres:latest'
-    container_name: voc-db
+    container_name: voc-db-2
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -19,24 +19,33 @@ services:
       - vocnet
 
   auth:
-    image: 'mymiggi/voc-auth'
+    image: 'test:auth'
     container_name: voc-auth      
     networks:
       - vocnet
 
   backend:
-    image: 'mymiggi/voc-backend'
-    container_name: voc-backend    
+    image: 'test:api'
+    container_name: voc-backend
+    environment:
+      QUARKUS_OAUTH2_CLIENT_ID: 0
+      QUARKUS_OAUTH2_INTROSPECTION_URL: http://voc-auth:8282/oauth/introspection
+      DB_HOST: voc-db-2
+      DB_NAME: postgres
+      DB_PASSWORD: postgres
+      DB_USERNAME: postgres
     networks:
       - vocnet
     ports:
-      - 8888:8888
+      - 8080:8080
 
   frontend:
-    image: 'mymiggi/voc-frontend'
-    container_name: voc-frontend    
+    image: 'test:gui'
+    container_name: voc-frontend
+    environment:
+      VUE_APP_APISERVER_URL: https://apis.mymiggi.de/voc-trainer/
     networks:
       - vocnet
     ports:
-      - 3000:3000
+      - 3000:80
     

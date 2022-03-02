@@ -1,0 +1,35 @@
+variables:
+  REGISTRY: registry.mymiggi.de
+  ROOT_IMAGE: $REGISTRY/miggiv2/voc-trainer
+
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  # Rootless Docker
+  - export XDG_RUNTIME_DIR=/home/gitlab-runner/.docker/run
+  - export PATH=/home/gitlab-runner/bin:$PATH
+  - export DOCKER_HOST=unix:///home/gitlab-runner/.docker/run/docker.sock
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY
+
+build-job:
+  stage: build
+  script:
+    - cd voc_trainer_auth
+    - ./mvnw clean package -DskipTests
+    - cd ../voc_trainer_backend
+    - ./mvnw clean package -DskipTests
+
+deploy-job:
+  stage: deploy
+  script:
+    - cd voc_trainer_auth/target/quarkus-app/
+    - docker build ../.. -t $ROOT_IMAGE/auth
+    - cd ../../../voc_trainer_backend/target/quarkus-app/
+    - docker build ../.. -t $ROOT_IMAGE/api
+    - cd ../../../voc_trainer_auth/
+    - docker build -t $ROOT_IMAGE/gui
+    - docker push $ROOT_IMAGE/auth
+    - docker push $ROOT_IMAGE/api

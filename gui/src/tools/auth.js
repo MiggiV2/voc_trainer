@@ -22,4 +22,4 @@ export function sha512(str) {
     });
 }
 
-export var HOST = "http://localhost:8080/voc-trainer/";
+export var HOST = 'http://localhost:8080/voc-trainer/' /*Will be replaced in Dockerimage with env*/
