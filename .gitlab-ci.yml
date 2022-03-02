@@ -26,7 +26,7 @@ build-job:
     - cd ../../../api/target/quarkus-app/
     - docker build ../.. -t $ROOT_IMAGE/auth
     - cd ../../../gui/
-    - docker build -t $ROOT_IMAGE/gui
+    - docker build . -t $ROOT_IMAGE/gui
 
 deploy-job:
   stage: deploy
