@@ -1,7 +1,7 @@
 <template>
   <!--:class="{ 'dark-theme': theme == 'dark' }"-->
   <div class="footer-wrapped desktop">
-    <div class="row footer">
+    <div class="row align-items-center footer">
       <div class="col-auto">
         <i class="bi bi-discord"></i>
       </div>
@@ -27,7 +27,7 @@ var serverURL = "https://discord.gg/aSJJwn9";
 var ownerURL = "https://discord.com/channels/@me/309696934174785556";
 var gitURL = "https://github.com/MiggiV2/voc_trainer";
 var botURL =
-  "https://discord.com/oauth2/authorize?client_id=732152444787753002&scope=bot&permissions=0";
+  "https://discord.com/oauth2/authorize?client_id=732152444787753002&permissions=0&scope=bot%20applications.commands";
 </script>
 
 <style scoped>
@@ -42,7 +42,6 @@ var botURL =
   z-index: 100;  
 }
 .footer {
-  padding: 6px;
   max-width: 90vw;
   margin-left: 5vw;
 }
