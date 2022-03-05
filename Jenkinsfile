@@ -1,5 +1,5 @@
 node {
-  git branch: "main", url: "http://gitea:3000/Miggi/r6-maps"
+  git branch: "main", url: "http://gitea:3000/Miggi/voc-trainer"
 
   withEnv(['REGISTRY=registry.mymiggi.de', 'ROOT_IMAGE=$REGISTRY/Miggi/voc-trainer']) {
     stage ('Build the Docker image') {
