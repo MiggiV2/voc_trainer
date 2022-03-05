@@ -4,6 +4,7 @@ node {
   withEnv(['REGISTRY=registry.mymiggi.de', 'ROOT_IMAGE=$REGISTRY/Miggi/voc-trainer']) {
     stage ('Build the Docker image') {
       sh "echo building the image..."
+      sh "ls -la"
       sh "cd auth"
       sh "./mvnw clean package -DskipTests"
       sh "cd ../api"
