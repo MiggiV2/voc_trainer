@@ -74,7 +74,7 @@
 import { reactive } from "vue";
 import { HOST } from "../tools/auth";
 import { getCookie } from "../tools/cookie";
-import Toast from "./SuccessToast.vue";
+import Toast from "@/components/SuccessToastComp.vue";
 
 var dictionary = reactive({
   name: null,

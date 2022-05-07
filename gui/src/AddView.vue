@@ -5,9 +5,9 @@
 </template>
 
 <script setup>
-import Header from "./components/Header.vue";
-import AddForm from "./components/AddForm.vue";
-import Footer from "./components/Footer.vue";
+import Header from "@/components/HeaderComp.vue";
+import AddForm from "@/components/AddFormComp.vue";
+import Footer from "@/components/FooterComp.vue";
 
 document.title = 'Add | Voc-Trainer';
 </script>

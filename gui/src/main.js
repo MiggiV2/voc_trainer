@@ -3,16 +3,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import HomeComponent from './Main.vue';
-import CallBack from './CallBack.vue'
-import Add from './Add.vue';
-import Read from './Read.vue';
-import Search from './Search.vue';
-import Trainer from './Train.vue';
-import MyDictionarys from './MyDictionarys.vue';
-import UsersDictionarys from './UsersDictionarys.vue';
-import Saved from './Saved.vue';
-import NoPage from './NoPage.vue';
+import HomeComponent from './MainView.vue';
+import CallBack from './CallBackView.vue'
+import Add from './AddView.vue';
+import Read from './ReadView.vue';
+import Search from './SearchView.vue';
+import Trainer from './TrainView.vue';
+import MyDictionarys from './MyDictionarysView.vue';
+import UsersDictionarys from './UsersDictionarysView.vue';
+import Saved from './SavedView.vue';
+import NoPage from './NoPageView.vue';
 
 require('@/assets/css/style.css');
 

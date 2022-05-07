@@ -329,7 +329,7 @@ import { reactive } from "vue";
 import { HOST, sha512 } from "../tools/auth";
 import { getAvatarURLFromUser, theme } from "../tools/user";
 import { getCookie } from "../tools/cookie";
-import Toast from "./SuccessToast.vue";
+import Toast from "@/components/SuccessToastComp.vue";
 
 var urlParams = new URLSearchParams(window.location.search);
 var dictionary = reactive({

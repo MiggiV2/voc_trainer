@@ -2,7 +2,7 @@ export function getAuthURL() {
     return "https://discord.com/api/oauth2/authorize" +
         "?client_id=888091850467065936" +
         "&response_type=token" +
-        "&redirect_uri=http%3A%2F%2Flocalhost%2Fcallback" +
+        "&redirect_uri=https%3A%2F%2Fvoc.mymiggi.de%2Fcallback" +
         "&scope=identify";
 }
 
